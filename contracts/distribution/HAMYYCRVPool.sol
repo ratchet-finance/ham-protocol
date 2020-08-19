@@ -1,7 +1,3 @@
-/**
- *Submitted for verification at Etherscan.io on 2020-07-17
-*/
-
 /*
    ____            __   __        __   _
   / __/__ __ ___  / /_ / /  ___  / /_ (_)__ __
@@ -490,9 +486,6 @@ library Address {
 
 pragma solidity ^0.5.0;
 
-
-
-
 /**
  * @title SafeERC20
  * @dev Wrappers around ERC20 operations that throw on failure (when the token
@@ -602,7 +595,7 @@ contract LPTokenWrapper {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
-    IERC20 public comp = IERC20(0xc00e94Cb662C3520282E6f5717214004A7f26888);
+    IERC20 public yyCRV = IERC20(0x5dbcF33D8c2E976c6b560249878e6F1491Bca25c );
 
     uint256 private _totalSupply;
     mapping(address => uint256) private _balances;
@@ -618,13 +611,13 @@ contract LPTokenWrapper {
     function stake(uint256 amount) public {
         _totalSupply = _totalSupply.add(amount);
         _balances[msg.sender] = _balances[msg.sender].add(amount);
-        comp.safeTransferFrom(msg.sender, address(this), amount);
+        yyCRV.safeTransferFrom(msg.sender, address(this), amount);
     }
 
     function withdraw(uint256 amount) public {
         _totalSupply = _totalSupply.sub(amount);
         _balances[msg.sender] = _balances[msg.sender].sub(amount);
-        comp.safeTransfer(msg.sender, amount);
+        yyCRV.safeTransfer(msg.sender, amount);
     }
 }
 
