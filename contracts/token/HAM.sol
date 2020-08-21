@@ -317,6 +317,7 @@ contract HAMToken is HAMGovernanceToken {
     )
         external
         onlyRebaser
+        returns (uint256)
     {
         if (indexDelta == 0) {
           emit Rebase(epoch, hamsScalingFactor, hamsScalingFactor);
@@ -339,6 +340,7 @@ contract HAMToken is HAMGovernanceToken {
         // The rebase bug is this line right here, don't solve until properly understood.
         totalSupply = initSupply.mul(hamsScalingFactor);
         emit Rebase(epoch, prevHamsScalingFactor, hamsScalingFactor);
+        return totalSupply;
     }
 }
 
