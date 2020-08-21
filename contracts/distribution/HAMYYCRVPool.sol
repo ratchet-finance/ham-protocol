@@ -621,7 +621,7 @@ contract LPTokenWrapper {
     }
 }
 
-contract HAMCOMPPool is LPTokenWrapper, IRewardDistributionRecipient {
+contract HAMYYCRVPool is LPTokenWrapper, IRewardDistributionRecipient {
     IERC20 public ham = IERC20(0x0e2298E3B3390e3b945a5456fBf59eCc3f55DA16);
     uint256 public constant DURATION = 625000; // ~7 1/4 days
 

@@ -1029,7 +1029,7 @@ describe("Distribution", () => {
 
         let a = await ham.web3.eth.getBlock('latest');
 
-        let starttime = await ham.contracts.comp_pool.methods.starttime().call();
+        let starttime = await ham.contracts.yycrv_pool.methods.starttime().call();
 
         let waittime = starttime - a["timestamp"];
         if (waittime > 0) {
@@ -1038,27 +1038,27 @@ describe("Distribution", () => {
           console.log("late entry", waittime)
         }
 
-        await ham.contracts.comp.methods.approve(ham.contracts.comp_pool.options.address, -1).send({from: user});
+        await ham.contracts.comp.methods.approve(ham.contracts.yycrv_pool.options.address, -1).send({from: user});
 
-        await ham.contracts.comp_pool.methods.stake(
+        await ham.contracts.yycrv_pool.methods.stake(
           "50000000000000000000000"
         ).send({
           from: user,
           gas: 300000
         });
 
-        let earned = await ham.contracts.comp_pool.methods.earned(user).call();
+        let earned = await ham.contracts.yycrv_pool.methods.earned(user).call();
 
-        let rr = await ham.contracts.comp_pool.methods.rewardRate().call();
+        let rr = await ham.contracts.yycrv_pool.methods.rewardRate().call();
 
-        let rpt = await ham.contracts.comp_pool.methods.rewardPerToken().call();
+        let rpt = await ham.contracts.yycrv_pool.methods.rewardPerToken().call();
         //console.log(earned, rr, rpt);
         await ham.testing.increaseTime(625000 + 100);
         // await ham.testing.mineBlock();
 
-        earned = await ham.contracts.comp_pool.methods.earned(user).call();
+        earned = await ham.contracts.yycrv_pool.methods.earned(user).call();
 
-        rpt = await ham.contracts.comp_pool.methods.rewardPerToken().call();
+        rpt = await ham.contracts.yycrv_pool.methods.rewardPerToken().call();
 
         let ysf = await ham.contracts.ham.methods.hamsScalingFactor().call();
 
@@ -1067,7 +1067,7 @@ describe("Distribution", () => {
 
         let ham_bal = await ham.contracts.ham.methods.balanceOf(user).call()
 
-        let j = await ham.contracts.comp_pool.methods.exit().send({
+        let j = await ham.contracts.yycrv_pool.methods.exit().send({
           from: user,
           gas: 300000
         });

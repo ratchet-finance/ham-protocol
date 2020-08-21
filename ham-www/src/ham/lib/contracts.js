@@ -21,7 +21,7 @@ import YFIPoolJson from '../clean_build/contracts/HAMYFIPool.json';
 
 import MKRPoolJson from '../clean_build/contracts/HAMMKRPool.json';
 import LENDPoolJson from '../clean_build/contracts/HAMLENDPool.json';
-import COMPPoolJson from '../clean_build/contracts/HAMCOMPPool.json';
+import YYCRVPoolJson from '../clean_build/contracts/HAMYYCRVPool.json';
 import SNXPoolJson from '../clean_build/contracts/HAMSNXPool.json';
 import LINKPoolJson from '../clean_build/contracts/HAMLINKPool.json';
 
@@ -54,7 +54,7 @@ export class Contracts {
     this.ampl_pool = new this.web3.eth.Contract(AMPLPoolJson.abi);
     this.ycrv_pool = new this.web3.eth.Contract(IncJson.abi);
 
-    this.comp_pool = new this.web3.eth.Contract(COMPPoolJson.abi);
+    this.yycrv_pool = new this.web3.eth.Contract(YYCRVPoolJson.abi);
     this.link_pool = new this.web3.eth.Contract(LINKPoolJson.abi);
     this.lend_pool = new this.web3.eth.Contract(LENDPoolJson.abi);
     this.snx_pool = new this.web3.eth.Contract(SNXPoolJson.abi);
@@ -105,7 +105,7 @@ export class Contracts {
       { contract: this.mkr_pool, json: MKRPoolJson },
       { contract: this.lend_pool, json: LENDPoolJson },
       { contract: this.link_pool, json: LINKPoolJson },
-      { contract: this.comp_pool, json: COMPPoolJson },
+      { contract: this.yycrv_pool, json: YYCRVPoolJson },
     ]
 
     contracts.forEach(contract => this.setContractProvider(
@@ -132,7 +132,7 @@ export class Contracts {
       {"tokenAddr": this.yfi.options.address, "poolAddr": this.yfi_pool.options.address},
       {"tokenAddr": this.snx.options.address, "poolAddr": this.snx_pool.options.address},
       {"tokenAddr": this.weth.options.address, "poolAddr": this.eth_pool.options.address},
-      {"tokenAddr": this.comp.options.address, "poolAddr": this.comp_pool.options.address},
+      {"tokenAddr": this.comp.options.address, "poolAddr": this.yycrv_pool.options.address},
       {"tokenAddr": this.link.options.address, "poolAddr": this.link_pool.options.address},
       {"tokenAddr": this.lend.options.address, "poolAddr": this.lend_pool.options.address},
       {"tokenAddr": this.mkr.options.address, "poolAddr": this.mkr_pool.options.address},

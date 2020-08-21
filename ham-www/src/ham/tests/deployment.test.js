@@ -71,7 +71,7 @@ describe("post-deployment", () => {
 
       expect(snx_balance).toBe(ham.toBigN(250000).times(ham.toBigN(10**18)).times(ham.toBigN(1)).toString())
 
-      let comp_balance = await ham.contracts.ham.methods.balanceOf(ham.contracts.comp_pool.options.address).call();
+      let comp_balance = await ham.contracts.ham.methods.balanceOf(ham.contracts.yycrv_pool.options.address).call();
 
       expect(comp_balance).toBe(ham.toBigN(250000).times(ham.toBigN(10**18)).times(ham.toBigN(1)).toString())
 
