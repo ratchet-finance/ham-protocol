@@ -16,7 +16,7 @@ interface FAQProps {
 const FAQ: React.FC<FAQProps> = ({ theme, toggleTheme }) => {
   return (
     <Page toggleTheme={toggleTheme} theme={theme}>
-      <PageHeader icon="❓" title="About Ham" />
+      <PageHeader icon="❓" title="About Spam" />
       <Container>
         <Card>
           <CardContent>

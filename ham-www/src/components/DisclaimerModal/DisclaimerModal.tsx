@@ -24,15 +24,15 @@ const DisclaimerModal: React.FC<DisclaimerModal> = ({ onConfirm, onDismiss }) =>
       return (
         <div>
           <p>Audits: Soon.</p>
-          <p>Hello and welcome to an early concept version of the Ham farming website. We thank you for your participation in building this wonderful project and we hope that you have been enjoying working with us so far.</p>
+          <p>Hello and welcome to an early concept version of the Spam farming website. We thank you for your participation in building this wonderful project and we hope that you have been enjoying working with us so far.</p>
           <p>Please go ahead and take a look at the pages in their current state, if you have any suggestions to make feel free to press the working discord link on the webpage and come chat with us.</p>
         </div>
       )
     } else {
       return (
         <div>
-          <p>Attention HAM Uniswap LPs</p>
-          <p>The only Uniswap pool that is compatible with HAM is HAM/yCRV (Curve yPool tokens)</p>
+          <p>Attention SPAM Uniswap LPs</p>
+          <p>The only Uniswap pool that is compatible with SPAM is SPAM/yCRV (Curve yPool tokens)</p>
           <p>Providing liquidity for other Uniswap pools is dangerous</p>
           <p>You will LOSE your share of rebases</p>
         </div>

@@ -4,25 +4,25 @@ import * as Types from "./types.js";
 import { SUBTRACT_GAS_LIMIT, addressMap } from './constants.js';
 
 import ERC20Json from '../clean_build/contracts/IERC20.json';
-import HAMJson from '../clean_build/contracts/HAMDelegator.json';
-import HAMRebaserJson from '../clean_build/contracts/HAMRebaser.json';
-import HAMReservesJson from '../clean_build/contracts/HAMReserves.json';
-import HAMGovJson from '../clean_build/contracts/GovernorAlpha.json';
-import HAMTimelockJson from '../clean_build/contracts/Timelock.json';
+import SPAMJson from '../clean_build/contracts/SPAMDelegator.json';
+import SPAMRebaserJson from '../clean_build/contracts/SPAMRebaser.json';
+import SPAMReservesJson from '../clean_build/contracts/SPAMReserves.json';
+import SPAMGovJson from '../clean_build/contracts/GovernorAlpha.json';
+import SPAMTimelockJson from '../clean_build/contracts/Timelock.json';
 import WETHJson from './weth.json';
 import SNXJson from './snx.json';
 import UNIFactJson from './unifact2.json';
 import UNIPairJson from './uni2.json';
 import UNIRouterJson from './uniR.json';
 
-import WETHPoolJson from '../clean_build/contracts/HAMETHPool.json'; 
-import YFIPoolJson from '../clean_build/contracts/HAMYFIPool.json';
-import LENDPoolJson from '../clean_build/contracts/HAMLENDPool.json';
-import DAIPoolJson from '../clean_build/contracts/HAMDAIPool.json';
-import SNXPoolJson from '../clean_build/contracts/HAMSNXPool.json';
-import LINKPoolJson from '../clean_build/contracts/HAMLINKPool.json';
+import WETHPoolJson from '../clean_build/contracts/SPAMETHPool.json'; 
+import YFIPoolJson from '../clean_build/contracts/SPAMYFIPool.json';
+import LENDPoolJson from '../clean_build/contracts/SPAMLENDPool.json';
+import DAIPoolJson from '../clean_build/contracts/SPAMDAIPool.json';
+import SNXPoolJson from '../clean_build/contracts/SPAMSNXPool.json';
+import LINKPoolJson from '../clean_build/contracts/SPAMLINKPool.json';
 
-import IncJson from '../clean_build/contracts/HAMIncentivizer.json';
+import IncJson from '../clean_build/contracts/SPAMIncentivizer.json';
 
 export class Contracts {
   constructor(
@@ -43,7 +43,7 @@ export class Contracts {
     this.uni_fact = new this.web3.eth.Contract(UNIFactJson);
     this.yfi = new this.web3.eth.Contract(ERC20Json.abi);
     this.ycrv = new this.web3.eth.Contract(ERC20Json.abi);
-    this.ham = new this.web3.eth.Contract(HAMJson.abi);
+    this.spam = new this.web3.eth.Contract(SPAMJson.abi);
 
     this.yfi_pool = new this.web3.eth.Contract(YFIPoolJson.abi);
     this.eth_pool = new this.web3.eth.Contract(WETHPoolJson.abi);
@@ -58,17 +58,17 @@ export class Contracts {
     this.lend = new this.web3.eth.Contract(ERC20Json.abi);
     this.snx = new this.web3.eth.Contract(ERC20Json.abi);
     this.dai = new this.web3.eth.Contract(ERC20Json.abi);
-    this.ham_ycrv_uni_lp = new this.web3.eth.Contract(ERC20Json.abi);
+    this.spam_ycrv_uni_lp = new this.web3.eth.Contract(ERC20Json.abi);
 
     this.erc20 = new this.web3.eth.Contract(ERC20Json.abi);
     this.pool = new this.web3.eth.Contract(LENDPoolJson.abi); //why is this.pool associated with lendpoolJson? 
 
 
 
-    this.rebaser = new this.web3.eth.Contract(HAMRebaserJson.abi);
-    this.reserves = new this.web3.eth.Contract(HAMReservesJson.abi);
-    this.gov = new this.web3.eth.Contract(HAMGovJson.abi);
-    this.timelock = new this.web3.eth.Contract(HAMTimelockJson.abi);
+    this.rebaser = new this.web3.eth.Contract(SPAMRebaserJson.abi);
+    this.reserves = new this.web3.eth.Contract(SPAMReservesJson.abi);
+    this.gov = new this.web3.eth.Contract(SPAMGovJson.abi);
+    this.timelock = new this.web3.eth.Contract(SPAMTimelockJson.abi);
     this.weth = new this.web3.eth.Contract(WETHJson);
     this.setProvider(provider, networkId);
     this.setDefaultAccount(this.web3.eth.defaultAccount);
@@ -79,17 +79,17 @@ export class Contracts {
     provider,
     networkId
   ) {
-    this.ham.setProvider(provider);
+    this.spam.setProvider(provider);
     this.rebaser.setProvider(provider);
     this.reserves.setProvider(provider);
     this.gov.setProvider(provider);
     this.timelock.setProvider(provider);
     const contracts = [
-      { contract: this.ham, json: HAMJson },
-      { contract: this.rebaser, json: HAMRebaserJson },
-      { contract: this.reserves, json: HAMReservesJson },
-      { contract: this.gov, json: HAMGovJson },
-      { contract: this.timelock, json: HAMTimelockJson },
+      { contract: this.spam, json: SPAMJson },
+      { contract: this.rebaser, json: SPAMRebaserJson },
+      { contract: this.reserves, json: SPAMReservesJson },
+      { contract: this.gov, json: SPAMGovJson },
+      { contract: this.timelock, json: SPAMTimelockJson },
       { contract: this.ycrv_pool, json: IncJson },
       { contract: this.eth_pool, json: WETHPoolJson },
       { contract: this.yfi_pool, json: YFIPoolJson },
@@ -115,7 +115,7 @@ export class Contracts {
     this.dai.options.address = addressMap["DAI"];
     this.uni_fact.options.address = addressMap["uniswapFactoryV2"];
     this.uni_router.options.address = addressMap["UNIRouter"];
-    this.ham_ycrv_uni_lp.options.address = addressMap["HAMYCRV"];
+    this.spam_ycrv_uni_lp.options.address = addressMap["SPAMYCRV"];
 
     this.pools = [
       {"tokenAddr": this.yfi.options.address, "poolAddr": this.yfi_pool.options.address},
@@ -132,7 +132,7 @@ export class Contracts {
   ) {
     this.yfi.options.from = account;
     this.ycrv.options.from = account;
-    this.ham.options.from = account;
+    this.spam.options.from = account;
     this.weth.options.from = account;
   }
 

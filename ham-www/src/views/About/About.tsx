@@ -24,7 +24,7 @@ interface AboutProps {
 const About: React.FC<AboutProps> = ({ theme, toggleTheme }) => {
   return (
     <Page toggleTheme={toggleTheme} theme={theme}>
-      <PageHeader icon="📖" title="About HAM" />
+      <PageHeader icon="📖" title="About SPAM" />
       <Container>
         <Card>
           <CardContent>

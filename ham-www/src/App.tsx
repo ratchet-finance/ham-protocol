@@ -11,7 +11,7 @@ import DisclaimerModal from './components/DisclaimerModal'
 
 import FarmsProvider from './contexts/Farms'
 import ModalsProvider from './contexts/Modals'
-import HamProvider from './contexts/HamProvider'
+import SpamProvider from './contexts/SpamProvider'
 import TransactionProvider from './contexts/Transactions'
 
 import useModal from './hooks/useModal'
@@ -40,7 +40,7 @@ const App: React.FC = ({ children }) => {
   return (
     <ThemeProvider theme={(ThemeMap as any)[theme]}>
       <UseWalletProvider chainId={1}>
-        <HamProvider>
+        <SpamProvider>
           <TransactionProvider>
             <ModalsProvider>
               <FarmsProvider>
@@ -61,7 +61,7 @@ const App: React.FC = ({ children }) => {
               </FarmsProvider>
             </ModalsProvider>
           </TransactionProvider>
-        </HamProvider>
+        </SpamProvider>
       </UseWalletProvider>
     </ThemeProvider>
   )

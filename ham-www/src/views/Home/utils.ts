@@ -1,4 +1,4 @@
-import { Ham } from '../../ham'
+import { Spam } from '../../spam'
 
 import {
   getCurrentPrice as gCP,
@@ -7,41 +7,41 @@ import {
   getNextRebaseTimestamp as gNRT,
   getTotalSupply as gTS,
   getScalingFactor,
-} from '../../hamUtils'
+} from '../../spamUtils'
 
-const getCurrentPrice = async (ham: typeof Ham): Promise<number> => {
-  // FORBROCK: get current HAM price
-  return gCP(ham)
+const getCurrentPrice = async (spam: typeof Spam): Promise<number> => {
+  // FORBROCK: get current SPAM price
+  return gCP(spam)
 }
 
-const getTargetPrice = async (ham: typeof Ham): Promise<number> => {
-  // FORBROCK: get target HAM price
-  return gTP(ham)
+const getTargetPrice = async (spam: typeof Spam): Promise<number> => {
+  // FORBROCK: get target SPAM price
+  return gTP(spam)
 }
 
-const getCirculatingSupply = async (ham: typeof Ham): Promise<string> => {
+const getCirculatingSupply = async (spam: typeof Spam): Promise<string> => {
   // FORBROCK: get circulating supply
-  return gCS(ham)
+  return gCS(spam)
 }
 
-const getNextRebaseTimestamp = async (ham: typeof Ham): Promise<number> => {
+const getNextRebaseTimestamp = async (spam: typeof Spam): Promise<number> => {
   // FORBROCK: get next rebase timestamp
-  const nextRebase = await gNRT(ham) as number
+  const nextRebase = await gNRT(spam) as number
   return nextRebase * 1000
 }
 
-const getTotalSupply = async (ham: typeof Ham): Promise<string> => {
+const getTotalSupply = async (spam: typeof Spam): Promise<string> => {
   // FORBROCK: get total supply
-  return gTS(ham)
+  return gTS(spam)
 }
 
-export const getStats = async (ham: typeof Ham) => {
-  const curPrice = await getCurrentPrice(ham)
-  const circSupply = '' // await getCirculatingSupply(ham)
-  const nextRebase = await getNextRebaseTimestamp(ham)
-  const scalingFactor = Number((await getScalingFactor(ham)).toFixed(2))
-  const targetPrice = await getTargetPrice(ham)
-  const totalSupply = await getTotalSupply(ham)
+export const getStats = async (spam: typeof Spam) => {
+  const curPrice = await getCurrentPrice(spam)
+  const circSupply = '' // await getCirculatingSupply(spam)
+  const nextRebase = await getNextRebaseTimestamp(spam)
+  const scalingFactor = Number((await getScalingFactor(spam)).toFixed(2))
+  const targetPrice = await getTargetPrice(spam)
+  const totalSupply = await getTotalSupply(spam)
   return {
     circSupply,
     curPrice,

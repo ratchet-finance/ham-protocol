@@ -4,7 +4,7 @@ import { useWallet } from 'use-wallet'
 import { provider } from 'web3-core'
 import { Contract } from "web3-eth-contract"
 
-import { approve } from '../hamUtils'
+import { approve } from '../spamUtils'
 
 const useApprove = (tokenContract: Contract, poolContract: Contract) => {
   const { account }: { account: string, ethereum: provider } = useWallet()

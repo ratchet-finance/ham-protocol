@@ -1,5 +1,5 @@
 import {
-  Ham
+  Spam
 } from "../index.js";
 import * as Types from "../lib/types.js";
 import {
@@ -13,11 +13,11 @@ import {
 const ethUtil = require('ethereumjs-util');
 
 async function enfranchise(actor, amount, user) {
-  await ham.contracts.ham.methods.transfer(actor, amount.toString()).send({from: user});
-  await ham.contracts.ham.methods.delegate(actor).send({from: actor});
+  await spam.contracts.spam.methods.transfer(actor, amount.toString()).send({from: user});
+  await spam.contracts.spam.methods.delegate(actor).send({from: actor});
 }
 
-export const ham = new Ham(
+export const spam = new Spam(
   "http://localhost:8545/",
   // "http://127.0.0.1:9545/",
   "1001",
@@ -37,7 +37,7 @@ const oneEther = 10 ** 18;
 const EIP712 = require('./EIP712');
 
 describe("governorAlpha#castVote/2", () => {
-  let name = "HAM";
+  let name = "SPAM";
   let chainId = 1001;
   let snapshotId;
   let user;
@@ -57,48 +57,48 @@ describe("governorAlpha#castVote/2", () => {
   const pvk_a3 = "0x752dd9cf65e68cfaba7d60225cbdbc1f4729dd5e5507def72815ed0d8abc6249";
   const pvk_a4 = "0xefb595a0178eb79a8df953f87c5148402a224cdf725e88c0146727c6aceadccd";
   beforeAll(async () => {
-    await ham.testing.resetEVM("0x2");
-    accounts = await ham.web3.eth.getAccounts();
-    ham.addAccount(accounts[0]);
+    await spam.testing.resetEVM("0x2");
+    accounts = await spam.web3.eth.getAccounts();
+    spam.addAccount(accounts[0]);
     user = accounts[0];
     a1 = accounts[1];
     a2 = accounts[2];
     guy = accounts[3];
     a3 = accounts[4];
     a4 = accounts[5];
-    let one_hundred = ham.toBigN(100).times(ham.toBigN(10**18));
-    // await ham.contracts.ham.methods.transfer(guy, one_hundred.toString()).send({from: user});
+    let one_hundred = spam.toBigN(100).times(spam.toBigN(10**18));
+    // await spam.contracts.spam.methods.transfer(guy, one_hundred.toString()).send({from: user});
 
-    snapshotId = await ham.testing.snapshot();
+    snapshotId = await spam.testing.snapshot();
 
     targets = [a1];
     values = ["0"];
     signatures = ["getBalanceOf(address)"];
-    callDatas = [ham.web3.eth.abi.encodeParameters(['address'], [a1])];
+    callDatas = [spam.web3.eth.abi.encodeParameters(['address'], [a1])];
   });
 
   beforeEach(async () => {
-    await ham.testing.resetEVM("0x2");
-    await ham.contracts.ham.methods.delegate(a1).send({from: user, gas: 400000});
-    await ham.contracts.gov.methods.propose(targets, values, signatures, callDatas, "do nothing").send({from: a1, gas: 400000});
-    proposalId = await ham.contracts.gov.methods.latestProposalIds(a1).call();
+    await spam.testing.resetEVM("0x2");
+    await spam.contracts.spam.methods.delegate(a1).send({from: user, gas: 400000});
+    await spam.contracts.gov.methods.propose(targets, values, signatures, callDatas, "do nothing").send({from: a1, gas: 400000});
+    proposalId = await spam.contracts.gov.methods.latestProposalIds(a1).call();
   });
 
   describe("We must revert if:", () => {
     it("There does not exist a proposal with matching proposal id where the current block number is between the proposal's start block (exclusive) and end block (inclusive)", async () => {
-      await ham.testing.expectThrow(
-        ham.contracts.gov.methods.castVote(proposalId, true).call(),
+      await spam.testing.expectThrow(
+        spam.contracts.gov.methods.castVote(proposalId, true).call(),
         "GovernorAlpha::_castVote: voting is closed"
       );
     });
 
     test("Such proposal already has an entry in its voters set matching the sender", async () => {
-      await ham.testing.mineBlock();
-      await ham.testing.mineBlock();
+      await spam.testing.mineBlock();
+      await spam.testing.mineBlock();
 
-      await ham.contracts.gov.methods.castVote(proposalId, true).send({from: accounts[4]});
-      await ham.testing.expectThrow(
-        ham.contracts.gov.methods.castVote(proposalId, true).call({ from: accounts[4] }),
+      await spam.contracts.gov.methods.castVote(proposalId, true).send({from: accounts[4]});
+      await spam.testing.expectThrow(
+        spam.contracts.gov.methods.castVote(proposalId, true).call({ from: accounts[4] }),
         "GovernorAlpha::_castVote: voter already voted"
       );
     });
@@ -106,13 +106,13 @@ describe("governorAlpha#castVote/2", () => {
 
   describe("Otherwise", () => {
     it("we add the sender to the proposal's voters set", async () => {
-      await ham.testing.mineBlock();
-      await ham.testing.mineBlock();
-      let r = await ham.contracts.gov.methods.getReceipt(proposalId, accounts[2]).call();
+      await spam.testing.mineBlock();
+      await spam.testing.mineBlock();
+      let r = await spam.contracts.gov.methods.getReceipt(proposalId, accounts[2]).call();
       expect(r.hasVoted).toBe(false);
 
-      await ham.contracts.gov.methods.castVote(proposalId, true).send({from: accounts[2]});
-      r = await ham.contracts.gov.methods.getReceipt(proposalId, accounts[2]).call();
+      await spam.contracts.gov.methods.castVote(proposalId, true).send({from: accounts[2]});
+      r = await spam.contracts.gov.methods.getReceipt(proposalId, accounts[2]).call();
       expect(r.hasVoted).toBe(true);
     });
 
@@ -120,39 +120,39 @@ describe("governorAlpha#castVote/2", () => {
       let actor; // an account that will propose, receive tokens, delegate to self, and vote on own proposal
 
       test("and we add that ForVotes", async () => {
-        await ham.testing.mineBlock();
-        await ham.testing.mineBlock();
+        await spam.testing.mineBlock();
+        await spam.testing.mineBlock();
         actor = a2;
-        await enfranchise(actor, ham.toBigN(400001).times(10**18), user);
+        await enfranchise(actor, spam.toBigN(400001).times(10**18), user);
 
-        await ham.contracts.gov.methods.propose(targets, values, signatures, callDatas, "do nothing").send({from: actor, gas: 400000});
+        await spam.contracts.gov.methods.propose(targets, values, signatures, callDatas, "do nothing").send({from: actor, gas: 400000});
 
-        proposalId = await ham.contracts.gov.methods.latestProposalIds(actor).call();
+        proposalId = await spam.contracts.gov.methods.latestProposalIds(actor).call();
 
-        let beforeFors = (await ham.contracts.gov.methods.proposals(proposalId).call()).forVotes;
-        await ham.testing.mineBlock();
-        await ham.contracts.gov.methods.castVote(proposalId, true).send({ from: actor });
+        let beforeFors = (await spam.contracts.gov.methods.proposals(proposalId).call()).forVotes;
+        await spam.testing.mineBlock();
+        await spam.contracts.gov.methods.castVote(proposalId, true).send({ from: actor });
 
-        let afterFors = (await ham.contracts.gov.methods.proposals(proposalId).call()).forVotes;
-        expect(ham.toBigN(afterFors).toString()).toBe(ham.toBigN(beforeFors).plus(ham.toBigN(400001).times(10**24)).toString());
+        let afterFors = (await spam.contracts.gov.methods.proposals(proposalId).call()).forVotes;
+        expect(spam.toBigN(afterFors).toString()).toBe(spam.toBigN(beforeFors).plus(spam.toBigN(400001).times(10**24)).toString());
       })
 
       test("or AgainstVotes corresponding to the caller's support flag.", async () => {
-        await ham.testing.mineBlock();
-        await ham.testing.mineBlock();
+        await spam.testing.mineBlock();
+        await spam.testing.mineBlock();
         actor = accounts[4];
-        await enfranchise(actor, ham.toBigN(400001).times(10**18), user);
+        await enfranchise(actor, spam.toBigN(400001).times(10**18), user);
 
-        await ham.contracts.gov.methods.propose(targets, values, signatures, callDatas, "do nothing").send({from: actor, gas: 400000});
+        await spam.contracts.gov.methods.propose(targets, values, signatures, callDatas, "do nothing").send({from: actor, gas: 400000});
 
-        proposalId = await ham.contracts.gov.methods.latestProposalIds(actor).call();
+        proposalId = await spam.contracts.gov.methods.latestProposalIds(actor).call();
 
-        let beforeFors = (await ham.contracts.gov.methods.proposals(proposalId).call()).againstVotes;
-        await ham.testing.mineBlock();
-        await ham.contracts.gov.methods.castVote(proposalId, false).send({ from: actor });
+        let beforeFors = (await spam.contracts.gov.methods.proposals(proposalId).call()).againstVotes;
+        await spam.testing.mineBlock();
+        await spam.contracts.gov.methods.castVote(proposalId, false).send({ from: actor });
 
-        let afterFors = (await ham.contracts.gov.methods.proposals(proposalId).call()).againstVotes;
-        expect(ham.toBigN(afterFors).toString()).toBe(ham.toBigN(beforeFors).plus(ham.toBigN(400001).times(10**24)).toString());
+        let afterFors = (await spam.contracts.gov.methods.proposals(proposalId).call()).againstVotes;
+        expect(spam.toBigN(afterFors).toString()).toBe(spam.toBigN(beforeFors).plus(spam.toBigN(400001).times(10**24)).toString());
       });
     });
 
@@ -173,9 +173,9 @@ describe("governorAlpha#castVote/2", () => {
              },
              primaryType: 'Ballot',
              domain: {
-                 name: 'HAM Governor Alpha',
+                 name: 'SPAM Governor Alpha',
                  chainId: 1,
-                 verifyingContract: ham.contracts.gov.options.address,
+                 verifyingContract: spam.contracts.gov.options.address,
              },
              message: {
                  proposalId: proposalId,
@@ -186,8 +186,8 @@ describe("governorAlpha#castVote/2", () => {
         let sigHash = EIP712.encodeTypedData(typedData)
         const sig = ethUtil.ecsign(ethUtil.toBuffer(sigHash, 'hex'), ethUtil.toBuffer(pvk_a1, 'hex'));
 
-        await ham.testing.expectThrow(
-            ham.contracts.gov.methods.castVoteBySig(proposalId, false, 0, '0xbad', '0xbad').send({from: user}),
+        await spam.testing.expectThrow(
+            spam.contracts.gov.methods.castVoteBySig(proposalId, false, 0, '0xbad', '0xbad').send({from: user}),
             "GovernorAlpha::castVoteBySig: invalid signature"
         );
       });
@@ -195,9 +195,9 @@ describe("governorAlpha#castVote/2", () => {
       it('casts vote on behalf of the signatory', async () => {
 
 
-        await enfranchise(a4, ham.toBigN(400001).times(10**18), user);
-        await ham.contracts.gov.methods.propose(targets, values, signatures, callDatas, "do nothing").send({ from: a4, gas: 400000 });
-        proposalId = await ham.contracts.gov.methods.latestProposalIds(a4).call();
+        await enfranchise(a4, spam.toBigN(400001).times(10**18), user);
+        await spam.contracts.gov.methods.propose(targets, values, signatures, callDatas, "do nothing").send({ from: a4, gas: 400000 });
+        proposalId = await spam.contracts.gov.methods.latestProposalIds(a4).call();
 
         const typedData = {
              types: {
@@ -213,7 +213,7 @@ describe("governorAlpha#castVote/2", () => {
              },
              primaryType: 'Ballot',
              domain: {
-                 name: 'HAM Governor Alpha',
+                 name: 'SPAM Governor Alpha',
                  chainId: 1,
                  verifyingContract: "0x47Ff9D00cDAE31B4E09DEf8081bb3a1282e8061D",
              },
@@ -226,14 +226,14 @@ describe("governorAlpha#castVote/2", () => {
         let sigHash = EIP712.encodeTypedData(typedData)
         const sig = ethUtil.ecsign(ethUtil.toBuffer(sigHash, 'hex'), ethUtil.toBuffer(pvk_a4, 'hex'));
 
-        let beforeFors = (await ham.contracts.gov.methods.proposals(proposalId).call()).forVotes;
-        await ham.testing.mineBlock();
-        const tx = await ham.contracts.gov.methods.castVoteBySig(proposalId, true, sig.v, sig.r, sig.s).send({from: a4, gas: 100000});
+        let beforeFors = (await spam.contracts.gov.methods.proposals(proposalId).call()).forVotes;
+        await spam.testing.mineBlock();
+        const tx = await spam.contracts.gov.methods.castVoteBySig(proposalId, true, sig.v, sig.r, sig.s).send({from: a4, gas: 100000});
         console.log(tx.events)
         expect(tx.gasUsed < 80000);
 
-        let afterFors = (await ham.contracts.gov.methods.proposals(proposalId).call()).forVotes;
-        expect(ham.toBigN(afterFors).toString()).toBe(ham.toBigN(beforeFors).plus(ham.toBigN(400001).times(10**24)).toString());
+        let afterFors = (await spam.contracts.gov.methods.proposals(proposalId).call()).forVotes;
+        expect(spam.toBigN(afterFors).toString()).toBe(spam.toBigN(beforeFors).plus(spam.toBigN(400001).times(10**24)).toString());
       });
     });
   });

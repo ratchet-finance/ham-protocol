@@ -12,7 +12,7 @@ import useFarms from '../../../hooks/useFarms'
 
 import { Farm } from '../../../contexts/Farms'
 
-import { getPoolStartTime } from '../../../hamUtils'
+import { getPoolStartTime } from '../../../spamUtils'
 
 const FarmCards: React.FC = () => {
   const [farms] = useFarms()
@@ -70,7 +70,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm }) => {
   }
 
   useEffect(() => {
-    if (farm && farm.id === 'ycrv_ham_uni_lp') {
+    if (farm && farm.id === 'ycrv_spam_uni_lp') {
       getStartTime()
     }
   }, [farm, getStartTime])
@@ -79,7 +79,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm }) => {
 
   return (
     <StyledCardWrapper>
-      {farm.id === 'ycrv_ham_uni_lp' && (
+      {farm.id === 'ycrv_spam_uni_lp' && (
         <StyledCardAccent />
       )}
       <Card>

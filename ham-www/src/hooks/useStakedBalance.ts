@@ -4,24 +4,24 @@ import BigNumber from 'bignumber.js'
 import { useWallet } from 'use-wallet'
 import { Contract } from "web3-eth-contract"
 
-import { getStaked } from '../hamUtils'
-import useHam from './useHam'
+import { getStaked } from '../spamUtils'
+import useSpam from './useSpam'
 
 const useStakedBalance = (pool: Contract) => {
   const [balance, setBalance] = useState(new BigNumber(0))
   const { account }: { account: string } = useWallet()
-  const ham = useHam()
+  const spam = useSpam()
 
   const fetchBalance = useCallback(async () => {
-    const balance = await getStaked(ham, pool, account)
+    const balance = await getStaked(spam, pool, account)
     setBalance(new BigNumber(balance))
-  }, [account, pool, ham])
+  }, [account, pool, spam])
 
   useEffect(() => {
-    if (account && pool && ham) {
+    if (account && pool && spam) {
       fetchBalance()
     }
-  }, [account, pool, setBalance, ham])
+  }, [account, pool, setBalance, spam])
 
   return balance
 }

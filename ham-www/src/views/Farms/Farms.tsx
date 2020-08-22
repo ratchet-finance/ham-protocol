@@ -34,7 +34,7 @@ const Farms: React.FC<FarmsProps> = ({ theme, toggleTheme }) => {
           <Route exact path={path}>
             <PageHeader
               icon={<img src={butcher} height="96" />}
-              subtitle="Earn HAM tokens by providing liquidity."
+              subtitle="Earn SPAM tokens by providing liquidity."
               title="Select a farm."
             />
             <FarmCards />

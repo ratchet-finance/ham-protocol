@@ -6,7 +6,7 @@ BigNumber.config({
   DECIMAL_PLACES: 80,
 });
 
-export { Ham } from './Ham.js';
+export { Spam } from './Spam.js';
 export {
   Web3,
   BigNumber,
