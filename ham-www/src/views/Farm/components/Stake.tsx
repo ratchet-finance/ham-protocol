@@ -99,7 +99,7 @@ const Stake: React.FC<StakeProps> = ({
                   <RemoveIcon />
                 </IconButton>
                 <StyledActionSpacer />
-                {tokenName !== 'YCRV_HAM_UNI_LP' && (
+                {tokenName !== 'YCRV_SPAM_UNI_LP' && (
                   <IconButton onClick={onPresentDeposit}>
                     <AddIcon />
                   </IconButton>

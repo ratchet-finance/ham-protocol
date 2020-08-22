@@ -5,7 +5,7 @@ import Page from '../../components/Page'
 import PageHeader from '../../components/PageHeader'
 import Spacer from '../../components/Spacer'
 
-import useHam from '../../hooks/useHam'
+import useSpam from '../../hooks/useSpam'
 
 import Rebase from './components/Rebase'
 import Stats from './components/Stats'
@@ -19,7 +19,7 @@ interface HomeProps {
 }
 
 const Home: React.FC<HomeProps> = ({ theme, toggleTheme }) => {
-  const ham = useHam()
+  const spam = useSpam()
   const [{
     curPrice,
     nextRebase,
@@ -28,15 +28,15 @@ const Home: React.FC<HomeProps> = ({ theme, toggleTheme }) => {
   }, setStats] = useState<OverviewData>({})
 
   const fetchStats = useCallback(async () => {
-    const statsData = await getStats(ham)
+    const statsData = await getStats(spam)
     setStats(statsData)
-  }, [ham, setStats])
+  }, [spam, setStats])
 
   useEffect(() => {
-    if (ham) {
+    if (spam) {
       fetchStats()
     }
-  }, [fetchStats, ham])
+  }, [fetchStats, spam])
 
   return (
     <Page toggleTheme={toggleTheme} theme={theme}>

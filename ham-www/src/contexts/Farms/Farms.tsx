@@ -2,9 +2,9 @@ import React, { useCallback, useEffect, useState } from 'react'
 
 import { Contract } from 'web3-eth-contract'
 
-import { ham as hamAddress } from '../../constants/tokenAddresses'
-import useHam from '../../hooks/useHam'
-import { getPoolContracts } from '../../hamUtils'
+import { spam as spamAddress } from '../../constants/tokenAddresses'
+import useSpam from '../../hooks/useSpam'
+import { getPoolContracts } from '../../spamUtils'
 
 import Context from './context'
 import { Farm } from './types'
@@ -42,10 +42,10 @@ const SORT_FOR_POOL: { [key: string]: number } = {
 const Farms: React.FC = ({ children }) => {
 
   const [farms, setFarms] = useState<Farm[]>([])
-  const ham = useHam()
+  const spam = useSpam()
 
   const fetchPools = useCallback(async () => {
-    const pools: { [key: string]: Contract} = await getPoolContracts(ham)
+    const pools: { [key: string]: Contract} = await getPoolContracts(spam)
 
     const farmsArr: Farm[] = []
     const poolKeys = Object.keys(pools)
@@ -59,7 +59,7 @@ const Farms: React.FC = ({ children }) => {
       } else if (tokenKey === 'ampl') {
         tokenKey = 'ampl_eth_uni_lp' //I have kept this just in case.
       } else if (tokenKey === 'ycrv') {
-        tokenKey = 'ycrv_ham_uni_lp'
+        tokenKey = 'ycrv_spam_uni_lp'
       }
 
       const method = pool.methods[tokenKey]
@@ -67,7 +67,7 @@ const Farms: React.FC = ({ children }) => {
         let tokenAddress = ''
         if (method) {
           tokenAddress = await method().call()
-        } else if (tokenKey === 'ycrv_ham_uni_lp') {
+        } else if (tokenKey === 'ycrv_am_uni_lp') {
           tokenAddress = '0xdf5e0e81dff6faf3a7e52ba697820c5e32d806a8'
         }
         farmsArr.push({
@@ -75,8 +75,8 @@ const Farms: React.FC = ({ children }) => {
           name: NAME_FOR_POOL[poolKey],
           depositToken: tokenKey,
           depositTokenAddress: tokenAddress,
-          earnToken: 'ham',
-          earnTokenAddress: hamAddress,
+          earnToken: 'spam',
+          earnTokenAddress: spamAddress,
           icon: ICON_FOR_POOL[poolKey],
           id: tokenKey,
           sort: SORT_FOR_POOL[poolKey]
@@ -87,13 +87,13 @@ const Farms: React.FC = ({ children }) => {
     }
     farmsArr.sort((a, b) => a.sort < b.sort ? 1 : -1)
     setFarms(farmsArr)
-  }, [ham, setFarms])
+  }, [spam, setFarms])
 
   useEffect(() => {
-    if (ham) {
+    if (spam) {
       fetchPools()
     }
-  }, [ham, fetchPools])
+  }, [spam, fetchPools])
 
   return (
     <Context.Provider value={{ farms }}>

@@ -8,12 +8,12 @@ pragma solidity ^0.5.17;
 //    No Critical
 //    No High
 //
-// Changes made by HAM after audit:
+// Changes made by SPAM after audit:
 //    Formatting, naming, & uint256 instead of uint
 
 import "../lib/SafeMath.sol";
 
-contract Timelock {
+contract Timelock { 
     using SafeMath for uint256;
 
     /// @notice An event emitted when the timelock admin changes

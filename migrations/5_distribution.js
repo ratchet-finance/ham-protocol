@@ -3,29 +3,29 @@
 
 // Protocol
 // deployed second
-const HAMImplementation = artifacts.require("HAMDelegate");
-const HAMProxy = artifacts.require("HAMDelegator");
+const SPAMImplementation = artifacts.require("SPAMDelegate");
+const SPAMProxy = artifacts.require("SPAMDelegator");
 
 // deployed third
-const HAMReserves = artifacts.require("HAMReserves");
-const HAMRebaser = artifacts.require("HAMRebaser");
+const SPAMReserves = artifacts.require("SPAMReserves");
+const SPAMRebaser = artifacts.require("SPAMRebaser");
 
 const Gov = artifacts.require("GovernorAlpha");
 const Timelock = artifacts.require("Timelock");
 
 // deployed fourth
-const HAM_ETHPool = artifacts.require("HAMETHPool");
-const HAM_uAMPLPool = artifacts.require("HAMAMPLPool");
-const HAM_YFIPool = artifacts.require("HAMYFIPool");
-const HAM_LINKPool = artifacts.require("HAMLINKPool");
-const HAM_MKRPool = artifacts.require("HAMMKRPool");
-const HAM_LENDPool = artifacts.require("HAMLENDPool");
-const HAM_COMPPool = artifacts.require("HAMCOMPPool");
-const HAM_SNXPool = artifacts.require("HAMSNXPool");
+const SPAM_ETHPool = artifacts.require("SPAMETHPool");
+const SPAM_uAMPLPool = artifacts.require("SPAMAMPLPool");
+const SPAM_YFIPool = artifacts.require("SPAMYFIPool");
+const SPAM_LINKPool = artifacts.require("SPAMLINKPool");
+const SPAM_MKRPool = artifacts.require("SPAMMKRPool");
+const SPAM_LENDPool = artifacts.require("SPAMLENDPool");
+const SPAM_COMPPool = artifacts.require("SPAMCOMPPool");
+const SPAM_SNXPool = artifacts.require("SPAMSNXPool");
 
 
 // deployed fifth
-const HAMIncentivizer = artifacts.require("HAMIncentivizer");
+const SPAMIncentivizer = artifacts.require("SPAMIncentivizer");
 
 // ============ Main Migration ============
 
@@ -44,31 +44,31 @@ module.exports = migration;
 
 async function deployDistribution(deployer, network, accounts) {
   console.log(network)
-  let ham = await HAMProxy.deployed();
-  let yReserves = await HAMReserves.deployed()
-  let yRebaser = await HAMRebaser.deployed()
+  let spam = await SPAMProxy.deployed();
+  let yReserves = await SPAMReserves.deployed()
+  let yRebaser = await SPAMRebaser.deployed()
   let tl = await Timelock.deployed();
   let gov = await Gov.deployed();
   if (network != "test") {
-    await deployer.deploy(HAM_ETHPool);
-    await deployer.deploy(HAM_uAMPLPool);
-    await deployer.deploy(HAM_YFIPool);
-    await deployer.deploy(HAMIncentivizer);
-    await deployer.deploy(HAM_LINKPool);
-    await deployer.deploy(HAM_MKRPool);
-    await deployer.deploy(HAM_LENDPool);
-    await deployer.deploy(HAM_COMPPool);
-    await deployer.deploy(HAM_SNXPool);
+    await deployer.deploy(SPAM_ETHPool);
+    await deployer.deploy(SPAM_uAMPLPool);
+    await deployer.deploy(SPAM_YFIPool);
+    await deployer.deploy(SPAMIncentivizer);
+    await deployer.deploy(SPAM_LINKPool);
+    await deployer.deploy(SPAM_MKRPool);
+    await deployer.deploy(SPAM_LENDPool);
+    await deployer.deploy(SPAM_COMPPool);
+    await deployer.deploy(SPAM_SNXPool);
 
-    let eth_pool = new web3.eth.Contract(HAM_ETHPool.abi, HAM_ETHPool.address);
-    let ampl_pool = new web3.eth.Contract(HAM_uAMPLPool.abi, HAM_uAMPLPool.address);
-    let yfi_pool = new web3.eth.Contract(HAM_YFIPool.abi, HAM_YFIPool.address);
-    let lend_pool = new web3.eth.Contract(HAM_LENDPool.abi, HAM_LENDPool.address);
-    let mkr_pool = new web3.eth.Contract(HAM_MKRPool.abi, HAM_MKRPool.address);
-    let snx_pool = new web3.eth.Contract(HAM_SNXPool.abi, HAM_SNXPool.address);
-    let comp_pool = new web3.eth.Contract(HAM_COMPPool.abi, HAM_COMPPool.address);
-    let link_pool = new web3.eth.Contract(HAM_LINKPool.abi, HAM_LINKPool.address);
-    let ycrv_pool = new web3.eth.Contract(HAMIncentivizer.abi, HAMIncentivizer.address);
+    let eth_pool = new web3.eth.Contract(SPAM_ETHPool.abi, SPAM_ETHPool.address);
+    let ampl_pool = new web3.eth.Contract(SPAM_uAMPLPool.abi, SPAM_uAMPLPool.address);
+    let yfi_pool = new web3.eth.Contract(SPAM_YFIPool.abi, SPAM_YFIPool.address);
+    let lend_pool = new web3.eth.Contract(SPAM_LENDPool.abi, SPAM_LENDPool.address);
+    let mkr_pool = new web3.eth.Contract(SPAM_MKRPool.abi, SPAM_MKRPool.address);
+    let snx_pool = new web3.eth.Contract(SPAM_SNXPool.abi, SPAM_SNXPool.address);
+    let comp_pool = new web3.eth.Contract(SPAM_COMPPool.abi, SPAM_COMPPool.address);
+    let link_pool = new web3.eth.Contract(SPAM_LINKPool.abi, SPAM_LINKPool.address);
+    let ycrv_pool = new web3.eth.Contract(SPAMIncentivizer.abi, SPAMIncentivizer.address);
 
     console.log("setting distributor");
     await Promise.all([
@@ -90,15 +90,15 @@ async function deployDistribution(deployer, network, accounts) {
     console.log("transfering and notifying");
     console.log("eth");
     await Promise.all([
-      ham.transfer(HAM_ETHPool.address, two_fifty.toString()),
-      ham.transfer(HAM_uAMPLPool.address, two_fifty.toString()),
-      ham.transfer(HAM_YFIPool.address, two_fifty.toString()),
-      ham.transfer(HAM_LENDPool.address, two_fifty.toString()),
-      ham.transfer(HAM_MKRPool.address, two_fifty.toString()),
-      ham.transfer(HAM_SNXPool.address, two_fifty.toString()),
-      ham.transfer(HAM_COMPPool.address, two_fifty.toString()),
-      ham.transfer(HAM_LINKPool.address, two_fifty.toString()),
-      ham._setIncentivizer(HAMIncentivizer.address),
+      spam.transfer(SPAM_ETHPool.address, two_fifty.toString()),
+      spam.transfer(SPAM_uAMPLPool.address, two_fifty.toString()),
+      spam.transfer(SPAM_YFIPool.address, two_fifty.toString()),
+      spam.transfer(SPAM_LENDPool.address, two_fifty.toString()),
+      spam.transfer(SPAM_MKRPool.address, two_fifty.toString()),
+      spam.transfer(SPAM_SNXPool.address, two_fifty.toString()),
+      spam.transfer(SPAM_COMPPool.address, two_fifty.toString()),
+      spam.transfer(SPAM_LINKPool.address, two_fifty.toString()),
+      spam._setIncentivizer(SPAMIncentivizer.address),
     ]);
 
     await Promise.all([
@@ -140,14 +140,14 @@ async function deployDistribution(deployer, network, accounts) {
   }
 
   await Promise.all([
-    ham._setPendingGov(Timelock.address),
+    spam._setPendingGov(Timelock.address),
     yReserves._setPendingGov(Timelock.address),
     yRebaser._setPendingGov(Timelock.address),
   ]);
 
   await Promise.all([
       tl.executeTransaction(
-        HAMProxy.address,
+        SPAMProxy.address,
         0,
         "_acceptGov()",
         "0x",
@@ -155,7 +155,7 @@ async function deployDistribution(deployer, network, accounts) {
       ),
 
       tl.executeTransaction(
-        HAMReserves.address,
+        SPAMReserves.address,
         0,
         "_acceptGov()",
         "0x",
@@ -163,7 +163,7 @@ async function deployDistribution(deployer, network, accounts) {
       ),
 
       tl.executeTransaction(
-        HAMRebaser.address,
+        SPAMRebaser.address,
         0,
         "_acceptGov()",
         "0x",

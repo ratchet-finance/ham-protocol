@@ -4,8 +4,8 @@ import styled from 'styled-components'
 const Nav: React.FC = () => {
   return (
     <StyledNav>
-      <StyledLink href="https://github.com/Ham-Protocol/ham-protocol">Github</StyledLink>
-      <StyledLink href="https://twitter.com/HamDotMoney">Twitter</StyledLink>
+      <StyledLink href="https://github.com/ratchet-finance/spam-protocol">Github</StyledLink>
+      <StyledLink href="https://twitter.com/ratchet_finance">Twitter</StyledLink>
       <StyledLink href="https://discord.gg/XEzJAy8">Discord</StyledLink>
     </StyledNav>
   )

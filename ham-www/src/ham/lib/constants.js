@@ -22,7 +22,7 @@ export const INTEGERS = {
   INTEREST_RATE_BASE: new BigNumber('1e18'),
 };
 
-export const addressMap = {
+export const addressMap = { 
   uniswapFactory : "0xc0a47dFe034B400B47bDaD5FecDa2621de6c4d95",
   uniswapFactoryV2: "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
   YFI : "0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e",
@@ -33,5 +33,6 @@ export const addressMap = {
   DAI: "0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2",//Once again, 0x hasn't been changed from mkr's one.
   SNX: "0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F",
   LEND: "0x80fB784B7eD66730e8b1DBd9820aFD29931aab03",
-  HAMYCRV: "0x2C7a51A357d5739C5C74Bf3C96816849d2c9F726",
+  SPAMYCRV: "0x2C7a51A357d5739C5C74Bf3C96816849d2c9F726",
 }
+// TODO

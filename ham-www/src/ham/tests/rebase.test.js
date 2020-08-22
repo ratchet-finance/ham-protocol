@@ -1,5 +1,5 @@
 import {
-  Ham
+  Spam
 } from "../index.js";
 import * as Types from "../lib/types.js";
 import {
@@ -11,7 +11,7 @@ import {
 } from "../lib/Helpers.js"
 
 
-export const ham = new Ham(
+export const spam = new Spam(
   "http://localhost:8545/",
   // "http://127.0.0.1:9545/",
   "1001",
@@ -36,53 +36,53 @@ describe("rebase_tests", () => {
   let unlocked_account = "0x681148725731f213b0187a3cbef215c291d85a3e";
 
   beforeAll(async () => {
-    const accounts = await ham.web3.eth.getAccounts();
-    ham.addAccount(accounts[0]);
+    const accounts = await spam.web3.eth.getAccounts();
+    spam.addAccount(accounts[0]);
     user = accounts[0];
     new_user = accounts[1];
-    snapshotId = await ham.testing.snapshot();
+    snapshotId = await spam.testing.snapshot();
   });
 
   beforeEach(async () => {
-    await ham.testing.resetEVM("0x2");
-    let a = await ham.contracts.ycrv.methods.transfer(user, "2000000000000000000000000").send({
+    await spam.testing.resetEVM("0x2");
+    let a = await spam.contracts.ycrv.methods.transfer(user, "2000000000000000000000000").send({
       from: unlocked_account
     });
   });
 
   describe("rebase", () => {
     test("user has ycrv", async () => {
-      let bal0 = await ham.contracts.ycrv.methods.balanceOf(user).call();
+      let bal0 = await spam.contracts.ycrv.methods.balanceOf(user).call();
       expect(bal0).toBe("2000000000000000000000000");
     });
     test("create pair", async () => {
-      await ham.contracts.uni_fact.methods.createPair(
-        ham.contracts.ycrv.options.address,
-        ham.contracts.ham.options.address
+      await spam.contracts.uni_fact.methods.createPair(
+        spam.contracts.ycrv.options.address,
+        spam.contracts.spam.options.address
       ).send({
         from: user,
         gas: 8000000
       })
     });
     test("mint pair", async () => {
-      await ham.contracts.ham.methods.approve(
-        ham.contracts.uni_router.options.address,
+      await spam.contracts.spam.methods.approve(
+        spam.contracts.uni_router.options.address,
         -1
       ).send({
         from: user,
         gas: 80000
       });
-      await ham.contracts.ycrv.methods.approve(
-        ham.contracts.uni_router.options.address,
+      await spam.contracts.ycrv.methods.approve(
+        spam.contracts.uni_router.options.address,
         -1
       ).send({
         from: user,
         gas: 80000
       });
 
-      await ham.contracts.uni_router.methods.addLiquidity(
-        ham.contracts.ham.options.address,
-        ham.contracts.ycrv.options.address,
+      await spam.contracts.uni_router.methods.addLiquidity(
+        spam.contracts.spam.options.address,
+        spam.contracts.ycrv.options.address,
         10000000,
         10000000,
         10000000,
@@ -93,33 +93,33 @@ describe("rebase_tests", () => {
         from: user,
         gas: 8000000
       });
-      let pair = await ham.contracts.uni_fact.methods.getPair(
-        ham.contracts.ham.options.address,
-        ham.contracts.ycrv.options.address
+      let pair = await spam.contracts.uni_fact.methods.getPair(
+        spam.contracts.spam.options.address,
+        spam.contracts.ycrv.options.address
       ).call();
-      ham.contracts.uni_pair.options.address = pair;
-      let bal = await ham.contracts.uni_pair.methods.balanceOf(user).call();
-      expect(ham.toBigN(bal).toNumber()).toBeGreaterThan(100)
+      spam.contracts.uni_pair.options.address = pair;
+      let bal = await spam.contracts.uni_pair.methods.balanceOf(user).call();
+      expect(spam.toBigN(bal).toNumber()).toBeGreaterThan(100)
     });
     test("init_twap", async () => {
-      await ham.contracts.ham.methods.approve(
-        ham.contracts.uni_router.options.address,
+      await spam.contracts.spam.methods.approve(
+        spam.contracts.uni_router.options.address,
         -1
       ).send({
         from: user,
         gas: 80000
       });
-      await ham.contracts.ycrv.methods.approve(
-        ham.contracts.uni_router.options.address,
+      await spam.contracts.ycrv.methods.approve(
+        spam.contracts.uni_router.options.address,
         -1
       ).send({
         from: user,
         gas: 80000
       });
 
-      await ham.contracts.uni_router.methods.addLiquidity(
-        ham.contracts.ham.options.address,
-        ham.contracts.ycrv.options.address,
+      await spam.contracts.uni_router.methods.addLiquidity(
+        spam.contracts.spam.options.address,
+        spam.contracts.ycrv.options.address,
         100000,
         100000,
         100000,
@@ -130,20 +130,20 @@ describe("rebase_tests", () => {
         from: user,
         gas: 8000000
       });
-      let pair = await ham.contracts.uni_fact.methods.getPair(
-        ham.contracts.ham.options.address,
-        ham.contracts.ycrv.options.address
+      let pair = await spam.contracts.uni_fact.methods.getPair(
+        spam.contracts.spam.options.address,
+        spam.contracts.ycrv.options.address
       ).call();
-      ham.contracts.uni_pair.options.address = pair;
-      let bal = await ham.contracts.uni_pair.methods.balanceOf(user).call();
+      spam.contracts.uni_pair.options.address = pair;
+      let bal = await spam.contracts.uni_pair.methods.balanceOf(user).call();
 
       // make a trade to get init values in uniswap
-      await ham.contracts.uni_router.methods.swapExactTokensForTokens(
+      await spam.contracts.uni_router.methods.swapExactTokensForTokens(
         1000,
         100,
         [
-          ham.contracts.ham.options.address,
-          ham.contracts.ycrv.options.address
+          spam.contracts.spam.options.address,
+          spam.contracts.ycrv.options.address
         ],
         user,
         1596740361 + 10000000
@@ -152,39 +152,39 @@ describe("rebase_tests", () => {
         gas: 1000000
       });
 
-      await ham.testing.increaseTime(1000);
+      await spam.testing.increaseTime(1000);
 
-      await ham.contracts.rebaser.methods.init_twap().send({
+      await spam.contracts.rebaser.methods.init_twap().send({
         from: user,
         gas: 500000
       });
 
 
 
-      let init_twap = await ham.contracts.rebaser.methods.timeOfTWAPInit().call();
-      let priceCumulativeLast = await ham.contracts.rebaser.methods.priceCumulativeLast().call();
-      expect(ham.toBigN(init_twap).toNumber()).toBeGreaterThan(0);
-      expect(ham.toBigN(priceCumulativeLast).toNumber()).toBeGreaterThan(0);
+      let init_twap = await spam.contracts.rebaser.methods.timeOfTWAPInit().call();
+      let priceCumulativeLast = await spam.contracts.rebaser.methods.priceCumulativeLast().call();
+      expect(spam.toBigN(init_twap).toNumber()).toBeGreaterThan(0);
+      expect(spam.toBigN(priceCumulativeLast).toNumber()).toBeGreaterThan(0);
     });
     test("activate rebasing", async () => {
-      await ham.contracts.ham.methods.approve(
-        ham.contracts.uni_router.options.address,
+      await spam.contracts.spam.methods.approve(
+        spam.contracts.uni_router.options.address,
         -1
       ).send({
         from: user,
         gas: 80000
       });
-      await ham.contracts.ycrv.methods.approve(
-        ham.contracts.uni_router.options.address,
+      await spam.contracts.ycrv.methods.approve(
+        spam.contracts.uni_router.options.address,
         -1
       ).send({
         from: user,
         gas: 80000
       });
 
-      await ham.contracts.uni_router.methods.addLiquidity(
-        ham.contracts.ham.options.address,
-        ham.contracts.ycrv.options.address,
+      await spam.contracts.uni_router.methods.addLiquidity(
+        spam.contracts.spam.options.address,
+        spam.contracts.ycrv.options.address,
         100000,
         100000,
         100000,
@@ -195,20 +195,20 @@ describe("rebase_tests", () => {
         from: user,
         gas: 8000000
       });
-      let pair = await ham.contracts.uni_fact.methods.getPair(
-        ham.contracts.ham.options.address,
-        ham.contracts.ycrv.options.address
+      let pair = await spam.contracts.uni_fact.methods.getPair(
+        spam.contracts.spam.options.address,
+        spam.contracts.ycrv.options.address
       ).call();
-      ham.contracts.uni_pair.options.address = pair;
-      let bal = await ham.contracts.uni_pair.methods.balanceOf(user).call();
+      spam.contracts.uni_pair.options.address = pair;
+      let bal = await spam.contracts.uni_pair.methods.balanceOf(user).call();
 
       // make a trade to get init values in uniswap
-      await ham.contracts.uni_router.methods.swapExactTokensForTokens(
+      await spam.contracts.uni_router.methods.swapExactTokensForTokens(
         1000,
         100,
         [
-          ham.contracts.ham.options.address,
-          ham.contracts.ycrv.options.address
+          spam.contracts.spam.options.address,
+          spam.contracts.ycrv.options.address
         ],
         user,
         1596740361 + 10000000
@@ -217,46 +217,46 @@ describe("rebase_tests", () => {
         gas: 1000000
       });
 
-      await ham.testing.increaseTime(1000);
+      await spam.testing.increaseTime(1000);
 
-      await ham.contracts.rebaser.methods.init_twap().send({
+      await spam.contracts.rebaser.methods.init_twap().send({
         from: user,
         gas: 500000
       });
 
 
 
-      let init_twap = await ham.contracts.rebaser.methods.timeOfTWAPInit().call();
-      let priceCumulativeLast = await ham.contracts.rebaser.methods.priceCumulativeLast().call();
-      expect(ham.toBigN(init_twap).toNumber()).toBeGreaterThan(0);
-      expect(ham.toBigN(priceCumulativeLast).toNumber()).toBeGreaterThan(0);
+      let init_twap = await spam.contracts.rebaser.methods.timeOfTWAPInit().call();
+      let priceCumulativeLast = await spam.contracts.rebaser.methods.priceCumulativeLast().call();
+      expect(spam.toBigN(init_twap).toNumber()).toBeGreaterThan(0);
+      expect(spam.toBigN(priceCumulativeLast).toNumber()).toBeGreaterThan(0);
 
-      await ham.testing.increaseTime(12 * 60 * 60);
+      await spam.testing.increaseTime(12 * 60 * 60);
 
-      await ham.contracts.rebaser.methods.activate_rebasing().send({
+      await spam.contracts.rebaser.methods.activate_rebasing().send({
         from: user,
         gas: 500000
       });
     });
     test("positive rebasing", async () => {
-      await ham.contracts.ham.methods.approve(
-        ham.contracts.uni_router.options.address,
+      await spam.contracts.spam.methods.approve(
+        spam.contracts.uni_router.options.address,
         -1
       ).send({
         from: user,
         gas: 80000
       });
-      await ham.contracts.ycrv.methods.approve(
-        ham.contracts.uni_router.options.address,
+      await spam.contracts.ycrv.methods.approve(
+        spam.contracts.uni_router.options.address,
         -1
       ).send({
         from: user,
         gas: 80000
       });
 
-      await ham.contracts.uni_router.methods.addLiquidity(
-        ham.contracts.ham.options.address,
-        ham.contracts.ycrv.options.address,
+      await spam.contracts.uni_router.methods.addLiquidity(
+        spam.contracts.spam.options.address,
+        spam.contracts.ycrv.options.address,
         "1000000000000000000000000",
         "1000000000000000000000000",
         "1000000000000000000000000",
@@ -268,21 +268,21 @@ describe("rebase_tests", () => {
         gas: 8000000
       });
 
-      let pair = await ham.contracts.uni_fact.methods.getPair(
-        ham.contracts.ham.options.address,
-        ham.contracts.ycrv.options.address
+      let pair = await spam.contracts.uni_fact.methods.getPair(
+        spam.contracts.spam.options.address,
+        spam.contracts.ycrv.options.address
       ).call();
 
-      ham.contracts.uni_pair.options.address = pair;
-      let bal = await ham.contracts.uni_pair.methods.balanceOf(user).call();
+      spam.contracts.uni_pair.options.address = pair;
+      let bal = await spam.contracts.uni_pair.methods.balanceOf(user).call();
 
       // make a trade to get init values in uniswap
-      await ham.contracts.uni_router.methods.swapExactTokensForTokens(
+      await spam.contracts.uni_router.methods.swapExactTokensForTokens(
         "100000000000",
         100000,
         [
-          ham.contracts.ycrv.options.address,
-          ham.contracts.ham.options.address
+          spam.contracts.ycrv.options.address,
+          spam.contracts.spam.options.address
         ],
         user,
         1596740361 + 10000000
@@ -292,12 +292,12 @@ describe("rebase_tests", () => {
       });
 
       // trade back for easier calcs later
-      await ham.contracts.uni_router.methods.swapExactTokensForTokens(
+      await spam.contracts.uni_router.methods.swapExactTokensForTokens(
         "100000000000",
         100000,
         [
-          ham.contracts.ham.options.address,
-          ham.contracts.ycrv.options.address
+          spam.contracts.spam.options.address,
+          spam.contracts.ycrv.options.address
         ],
         user,
         1596740361 + 10000000
@@ -306,20 +306,20 @@ describe("rebase_tests", () => {
         gas: 1000000
       });
 
-      await ham.testing.increaseTime(43200);
+      await spam.testing.increaseTime(43200);
 
-      await ham.contracts.rebaser.methods.init_twap().send({
+      await spam.contracts.rebaser.methods.init_twap().send({
         from: user,
         gas: 500000
       });
 
 
-      await ham.contracts.uni_router.methods.swapExactTokensForTokens(
+      await spam.contracts.uni_router.methods.swapExactTokensForTokens(
         "100000000000000000000000",
         100000,
         [
-          ham.contracts.ycrv.options.address,
-          ham.contracts.ham.options.address
+          spam.contracts.ycrv.options.address,
+          spam.contracts.spam.options.address
         ],
         user,
         1596740361 + 10000000
@@ -329,18 +329,18 @@ describe("rebase_tests", () => {
       });
 
       // init twap
-      let init_twap = await ham.contracts.rebaser.methods.timeOfTWAPInit().call();
+      let init_twap = await spam.contracts.rebaser.methods.timeOfTWAPInit().call();
 
       // wait 12 hours
-      await ham.testing.increaseTime(12 * 60 * 60);
+      await spam.testing.increaseTime(12 * 60 * 60);
 
       // perform trade to change price
-      await ham.contracts.uni_router.methods.swapExactTokensForTokens(
+      await spam.contracts.uni_router.methods.swapExactTokensForTokens(
         "10000000000000000000",
         100000,
         [
-          ham.contracts.ycrv.options.address,
-          ham.contracts.ham.options.address
+          spam.contracts.ycrv.options.address,
+          spam.contracts.spam.options.address
         ],
         user,
         1596740361 + 10000000
@@ -350,26 +350,26 @@ describe("rebase_tests", () => {
       });
 
       // activate rebasing
-      await ham.contracts.rebaser.methods.activate_rebasing().send({
+      await spam.contracts.rebaser.methods.activate_rebasing().send({
         from: user,
         gas: 500000
       });
 
 
-      let res_bal = await ham.contracts.ham.methods.balanceOf(
-          ham.contracts.reserves.options.address
+      let res_bal = await spam.contracts.spam.methods.balanceOf(
+          spam.contracts.reserves.options.address
       ).call();
 
       expect(res_bal).toBe("0");
 
-      bal = await ham.contracts.ham.methods.balanceOf(user).call();
+      bal = await spam.contracts.spam.methods.balanceOf(user).call();
 
-      let a = await ham.web3.eth.getBlock('latest');
+      let a = await spam.web3.eth.getBlock('latest');
 
-      let offset = await ham.contracts.rebaser.methods.rebaseWindowOffsetSec().call();
-      offset = ham.toBigN(offset).toNumber();
-      let interval = await ham.contracts.rebaser.methods.minRebaseTimeIntervalSec().call();
-      interval = ham.toBigN(interval).toNumber();
+      let offset = await spam.contracts.rebaser.methods.rebaseWindowOffsetSec().call();
+      offset = spam.toBigN(offset).toNumber();
+      let interval = await spam.contracts.rebaser.methods.minRebaseTimeIntervalSec().call();
+      interval = spam.toBigN(interval).toNumber();
 
       let i;
       if (a["timestamp"] % interval > offset) {
@@ -378,13 +378,13 @@ describe("rebase_tests", () => {
         i = offset - (a["timestamp"] % interval);
       }
 
-      await ham.testing.increaseTime(i);
+      await spam.testing.increaseTime(i);
 
-      let r = await ham.contracts.uni_pair.methods.getReserves().call();
-      let q = await ham.contracts.uni_router.methods.quote(ham.toBigN(10**18).toString(), r[0], r[1]).call();
+      let r = await spam.contracts.uni_pair.methods.getReserves().call();
+      let q = await spam.contracts.uni_router.methods.quote(spam.toBigN(10**18).toString(), r[0], r[1]).call();
       console.log("quote pre positive rebase", q);
 
-      let b = await ham.contracts.rebaser.methods.rebase().send({
+      let b = await spam.contracts.rebaser.methods.rebase().send({
         from: user,
         gas: 2500000
       });
@@ -392,47 +392,47 @@ describe("rebase_tests", () => {
       //console.log(b.events)
       console.log("positive rebase gas used:", b["gasUsed"]);
 
-      let bal1 = await ham.contracts.ham.methods.balanceOf(user).call();
+      let bal1 = await spam.contracts.spam.methods.balanceOf(user).call();
 
-      let resHAM = await ham.contracts.ham.methods.balanceOf(ham.contracts.reserves.options.address).call();
+      let resSPAM = await spam.contracts.spam.methods.balanceOf(spam.contracts.reserves.options.address).call();
 
-      let resycrv = await ham.contracts.ycrv.methods.balanceOf(ham.contracts.reserves.options.address).call();
+      let resycrv = await spam.contracts.ycrv.methods.balanceOf(spam.contracts.reserves.options.address).call();
 
-      console.log("bal user, bal ham res, bal res crv", bal1, resHAM, resycrv);
-      r = await ham.contracts.uni_pair.methods.getReserves().call();
-      q = await ham.contracts.uni_router.methods.quote(ham.toBigN(10**18).toString(), r[0], r[1]).call();
+      console.log("bal user, bal spam res, bal res crv", bal1, resSPAM, resycrv);
+      r = await spam.contracts.uni_pair.methods.getReserves().call();
+      q = await spam.contracts.uni_router.methods.quote(spam.toBigN(10**18).toString(), r[0], r[1]).call();
       console.log("post positive rebase quote", q);
 
       // new balance > old balance
-      expect(ham.toBigN(bal).toNumber()).toBeLessThan(ham.toBigN(bal1).toNumber());
-      // used full ham reserves
-      expect(ham.toBigN(resHAM).toNumber()).toBe(0);
+      expect(spam.toBigN(bal).toNumber()).toBeLessThan(spam.toBigN(bal1).toNumber());
+      // used full spam reserves
+      expect(spam.toBigN(resSPAM).toNumber()).toBe(0);
       // increases reserves
-      expect(ham.toBigN(resycrv).toNumber()).toBeGreaterThan(0);
+      expect(spam.toBigN(resycrv).toNumber()).toBeGreaterThan(0);
 
 
       // not below peg
-      expect(ham.toBigN(q).toNumber()).toBeGreaterThan(ham.toBigN(10**18).toNumber());
+      expect(spam.toBigN(q).toNumber()).toBeGreaterThan(spam.toBigN(10**18).toNumber());
     });
     test("negative rebasing", async () => {
-      await ham.contracts.ham.methods.approve(
-        ham.contracts.uni_router.options.address,
+      await spam.contracts.spam.methods.approve(
+        spam.contracts.uni_router.options.address,
         -1
       ).send({
         from: user,
         gas: 80000
       });
-      await ham.contracts.ycrv.methods.approve(
-        ham.contracts.uni_router.options.address,
+      await spam.contracts.ycrv.methods.approve(
+        spam.contracts.uni_router.options.address,
         -1
       ).send({
         from: user,
         gas: 80000
       });
 
-      await ham.contracts.uni_router.methods.addLiquidity(
-        ham.contracts.ham.options.address,
-        ham.contracts.ycrv.options.address,
+      await spam.contracts.uni_router.methods.addLiquidity(
+        spam.contracts.spam.options.address,
+        spam.contracts.ycrv.options.address,
         "1000000000000000000000000",
         "1000000000000000000000000",
         "1000000000000000000000000",
@@ -444,21 +444,21 @@ describe("rebase_tests", () => {
         gas: 8000000
       });
 
-      let pair = await ham.contracts.uni_fact.methods.getPair(
-        ham.contracts.ham.options.address,
-        ham.contracts.ycrv.options.address
+      let pair = await spam.contracts.uni_fact.methods.getPair(
+        spam.contracts.spam.options.address,
+        spam.contracts.ycrv.options.address
       ).call();
 
-      ham.contracts.uni_pair.options.address = pair;
-      let bal = await ham.contracts.uni_pair.methods.balanceOf(user).call();
+      spam.contracts.uni_pair.options.address = pair;
+      let bal = await spam.contracts.uni_pair.methods.balanceOf(user).call();
 
       // make a trade to get init values in uniswap
-      await ham.contracts.uni_router.methods.swapExactTokensForTokens(
+      await spam.contracts.uni_router.methods.swapExactTokensForTokens(
         "100000000000",
         100000,
         [
-          ham.contracts.ycrv.options.address,
-          ham.contracts.ham.options.address
+          spam.contracts.ycrv.options.address,
+          spam.contracts.spam.options.address
         ],
         user,
         1596740361 + 10000000
@@ -468,12 +468,12 @@ describe("rebase_tests", () => {
       });
 
       // trade back for easier calcs later
-      await ham.contracts.uni_router.methods.swapExactTokensForTokens(
+      await spam.contracts.uni_router.methods.swapExactTokensForTokens(
         "100000000000",
         100000,
         [
-          ham.contracts.ham.options.address,
-          ham.contracts.ycrv.options.address
+          spam.contracts.spam.options.address,
+          spam.contracts.ycrv.options.address
         ],
         user,
         1596740361 + 10000000
@@ -482,20 +482,20 @@ describe("rebase_tests", () => {
         gas: 1000000
       });
 
-      await ham.testing.increaseTime(43200);
+      await spam.testing.increaseTime(43200);
 
-      await ham.contracts.rebaser.methods.init_twap().send({
+      await spam.contracts.rebaser.methods.init_twap().send({
         from: user,
         gas: 500000
       });
 
 
-      await ham.contracts.uni_router.methods.swapExactTokensForTokens(
+      await spam.contracts.uni_router.methods.swapExactTokensForTokens(
         "500000000000000000000000",
         100000,
         [
-          ham.contracts.ham.options.address,
-          ham.contracts.ycrv.options.address
+          spam.contracts.spam.options.address,
+          spam.contracts.ycrv.options.address
         ],
         user,
         1596740361 + 10000000
@@ -505,18 +505,18 @@ describe("rebase_tests", () => {
       });
 
       // init twap
-      let init_twap = await ham.contracts.rebaser.methods.timeOfTWAPInit().call();
+      let init_twap = await spam.contracts.rebaser.methods.timeOfTWAPInit().call();
 
       // wait 12 hours
-      await ham.testing.increaseTime(12 * 60 * 60);
+      await spam.testing.increaseTime(12 * 60 * 60);
 
       // perform trade to change price
-      await ham.contracts.uni_router.methods.swapExactTokensForTokens(
+      await spam.contracts.uni_router.methods.swapExactTokensForTokens(
         "10000000000000000000",
         100000,
         [
-          ham.contracts.ham.options.address,
-          ham.contracts.ycrv.options.address
+          spam.contracts.spam.options.address,
+          spam.contracts.ycrv.options.address
         ],
         user,
         1596740361 + 10000000
@@ -526,20 +526,20 @@ describe("rebase_tests", () => {
       });
 
       // activate rebasing
-      await ham.contracts.rebaser.methods.activate_rebasing().send({
+      await spam.contracts.rebaser.methods.activate_rebasing().send({
         from: user,
         gas: 500000
       });
 
 
-      bal = await ham.contracts.ham.methods.balanceOf(user).call();
+      bal = await spam.contracts.spam.methods.balanceOf(user).call();
 
-      let a = await ham.web3.eth.getBlock('latest');
+      let a = await spam.web3.eth.getBlock('latest');
 
-      let offset = await ham.contracts.rebaser.methods.rebaseWindowOffsetSec().call();
-      offset = ham.toBigN(offset).toNumber();
-      let interval = await ham.contracts.rebaser.methods.minRebaseTimeIntervalSec().call();
-      interval = ham.toBigN(interval).toNumber();
+      let offset = await spam.contracts.rebaser.methods.rebaseWindowOffsetSec().call();
+      offset = spam.toBigN(offset).toNumber();
+      let interval = await spam.contracts.rebaser.methods.minRebaseTimeIntervalSec().call();
+      interval = spam.toBigN(interval).toNumber();
 
       let i;
       if (a["timestamp"] % interval > offset) {
@@ -548,13 +548,13 @@ describe("rebase_tests", () => {
         i = offset - (a["timestamp"] % interval);
       }
 
-      await ham.testing.increaseTime(i);
+      await spam.testing.increaseTime(i);
 
-      let r = await ham.contracts.uni_pair.methods.getReserves().call();
-      let q = await ham.contracts.uni_router.methods.quote(ham.toBigN(10**18).toString(), r[0], r[1]).call();
+      let r = await spam.contracts.uni_pair.methods.getReserves().call();
+      let q = await spam.contracts.uni_router.methods.quote(spam.toBigN(10**18).toString(), r[0], r[1]).call();
       console.log("quote pre negative rebase", q);
 
-      let b = await ham.contracts.rebaser.methods.rebase().send({
+      let b = await spam.contracts.rebaser.methods.rebase().send({
         from: user,
         gas: 2500000
       });
@@ -562,37 +562,37 @@ describe("rebase_tests", () => {
       //console.log(b.events)
       console.log("negative rebase gas used:", b["gasUsed"]);
 
-      let bal1 = await ham.contracts.ham.methods.balanceOf(user).call();
+      let bal1 = await spam.contracts.spam.methods.balanceOf(user).call();
 
-      let resHAM = await ham.contracts.ham.methods.balanceOf(ham.contracts.reserves.options.address).call();
+      let resSPAM = await spam.contracts.spam.methods.balanceOf(spam.contracts.reserves.options.address).call();
 
-      let resycrv = await ham.contracts.ycrv.methods.balanceOf(ham.contracts.reserves.options.address).call();
+      let resycrv = await spam.contracts.ycrv.methods.balanceOf(spam.contracts.reserves.options.address).call();
 
       // balance decreases
-      expect(ham.toBigN(bal1).toNumber()).toBeLessThan(ham.toBigN(bal).toNumber());
+      expect(spam.toBigN(bal1).toNumber()).toBeLessThan(spam.toBigN(bal).toNumber());
       // no increases to reserves
-      expect(ham.toBigN(resHAM).toNumber()).toBe(0);
-      expect(ham.toBigN(resycrv).toNumber()).toBe(0);
+      expect(spam.toBigN(resSPAM).toNumber()).toBe(0);
+      expect(spam.toBigN(resycrv).toNumber()).toBe(0);
     });
     test("no rebasing", async () => {
-      await ham.contracts.ham.methods.approve(
-        ham.contracts.uni_router.options.address,
+      await spam.contracts.spam.methods.approve(
+        spam.contracts.uni_router.options.address,
         -1
       ).send({
         from: user,
         gas: 80000
       });
-      await ham.contracts.ycrv.methods.approve(
-        ham.contracts.uni_router.options.address,
+      await spam.contracts.ycrv.methods.approve(
+        spam.contracts.uni_router.options.address,
         -1
       ).send({
         from: user,
         gas: 80000
       });
 
-      await ham.contracts.uni_router.methods.addLiquidity(
-        ham.contracts.ham.options.address,
-        ham.contracts.ycrv.options.address,
+      await spam.contracts.uni_router.methods.addLiquidity(
+        spam.contracts.spam.options.address,
+        spam.contracts.ycrv.options.address,
         "1000000000000000000000000",
         "1000000000000000000000000",
         "1000000000000000000000000",
@@ -604,21 +604,21 @@ describe("rebase_tests", () => {
         gas: 8000000
       });
 
-      let pair = await ham.contracts.uni_fact.methods.getPair(
-        ham.contracts.ham.options.address,
-        ham.contracts.ycrv.options.address
+      let pair = await spam.contracts.uni_fact.methods.getPair(
+        spam.contracts.spam.options.address,
+        spam.contracts.ycrv.options.address
       ).call();
 
-      ham.contracts.uni_pair.options.address = pair;
-      let bal = await ham.contracts.uni_pair.methods.balanceOf(user).call();
+      spam.contracts.uni_pair.options.address = pair;
+      let bal = await spam.contracts.uni_pair.methods.balanceOf(user).call();
 
       // make a trade to get init values in uniswap
-      await ham.contracts.uni_router.methods.swapExactTokensForTokens(
+      await spam.contracts.uni_router.methods.swapExactTokensForTokens(
         "100000000000",
         100000,
         [
-          ham.contracts.ycrv.options.address,
-          ham.contracts.ham.options.address
+          spam.contracts.ycrv.options.address,
+          spam.contracts.spam.options.address
         ],
         user,
         1596740361 + 10000000
@@ -628,12 +628,12 @@ describe("rebase_tests", () => {
       });
 
       // trade back for easier calcs later
-      await ham.contracts.uni_router.methods.swapExactTokensForTokens(
+      await spam.contracts.uni_router.methods.swapExactTokensForTokens(
         "100000000000",
         100000,
         [
-          ham.contracts.ham.options.address,
-          ham.contracts.ycrv.options.address
+          spam.contracts.spam.options.address,
+          spam.contracts.ycrv.options.address
         ],
         user,
         1596740361 + 10000000
@@ -642,20 +642,20 @@ describe("rebase_tests", () => {
         gas: 1000000
       });
 
-      await ham.testing.increaseTime(43200);
+      await spam.testing.increaseTime(43200);
 
-      await ham.contracts.rebaser.methods.init_twap().send({
+      await spam.contracts.rebaser.methods.init_twap().send({
         from: user,
         gas: 500000
       });
 
 
-      await ham.contracts.uni_router.methods.swapExactTokensForTokens(
+      await spam.contracts.uni_router.methods.swapExactTokensForTokens(
         "10000000000000000000000",
         100000,
         [
-          ham.contracts.ham.options.address,
-          ham.contracts.ycrv.options.address
+          spam.contracts.spam.options.address,
+          spam.contracts.ycrv.options.address
         ],
         user,
         1596740361 + 10000000
@@ -664,12 +664,12 @@ describe("rebase_tests", () => {
         gas: 1000000
       });
 
-      await ham.contracts.uni_router.methods.swapExactTokensForTokens(
+      await spam.contracts.uni_router.methods.swapExactTokensForTokens(
         "10000000000000000000000",
         100000,
         [
-          ham.contracts.ycrv.options.address,
-          ham.contracts.ham.options.address
+          spam.contracts.ycrv.options.address,
+          spam.contracts.spam.options.address
         ],
         user,
         1596740361 + 10000000
@@ -679,18 +679,18 @@ describe("rebase_tests", () => {
       });
 
       // init twap
-      let init_twap = await ham.contracts.rebaser.methods.timeOfTWAPInit().call();
+      let init_twap = await spam.contracts.rebaser.methods.timeOfTWAPInit().call();
 
       // wait 12 hours
-      await ham.testing.increaseTime(12 * 60 * 60);
+      await spam.testing.increaseTime(12 * 60 * 60);
 
       // perform trade to change price
-      await ham.contracts.uni_router.methods.swapExactTokensForTokens(
+      await spam.contracts.uni_router.methods.swapExactTokensForTokens(
         "10000000000000000000",
         100000,
         [
-          ham.contracts.ham.options.address,
-          ham.contracts.ycrv.options.address
+          spam.contracts.spam.options.address,
+          spam.contracts.ycrv.options.address
         ],
         user,
         1596740361 + 10000000
@@ -699,12 +699,12 @@ describe("rebase_tests", () => {
         gas: 1000000
       });
 
-      await ham.contracts.uni_router.methods.swapExactTokensForTokens(
+      await spam.contracts.uni_router.methods.swapExactTokensForTokens(
         "10000000000000000000",
         100000,
         [
-          ham.contracts.ycrv.options.address,
-          ham.contracts.ham.options.address
+          spam.contracts.ycrv.options.address,
+          spam.contracts.spam.options.address
         ],
         user,
         1596740361 + 10000000
@@ -714,20 +714,20 @@ describe("rebase_tests", () => {
       });
 
       // activate rebasing
-      await ham.contracts.rebaser.methods.activate_rebasing().send({
+      await spam.contracts.rebaser.methods.activate_rebasing().send({
         from: user,
         gas: 500000
       });
 
 
-      bal = await ham.contracts.ham.methods.balanceOf(user).call();
+      bal = await spam.contracts.spam.methods.balanceOf(user).call();
 
-      let a = await ham.web3.eth.getBlock('latest');
+      let a = await spam.web3.eth.getBlock('latest');
 
-      let offset = await ham.contracts.rebaser.methods.rebaseWindowOffsetSec().call();
-      offset = ham.toBigN(offset).toNumber();
-      let interval = await ham.contracts.rebaser.methods.minRebaseTimeIntervalSec().call();
-      interval = ham.toBigN(interval).toNumber();
+      let offset = await spam.contracts.rebaser.methods.rebaseWindowOffsetSec().call();
+      offset = spam.toBigN(offset).toNumber();
+      let interval = await spam.contracts.rebaser.methods.minRebaseTimeIntervalSec().call();
+      interval = spam.toBigN(interval).toNumber();
 
       let i;
       if (a["timestamp"] % interval > offset) {
@@ -736,54 +736,54 @@ describe("rebase_tests", () => {
         i = offset - (a["timestamp"] % interval);
       }
 
-      await ham.testing.increaseTime(i);
+      await spam.testing.increaseTime(i);
 
-      let r = await ham.contracts.uni_pair.methods.getReserves().call();
+      let r = await spam.contracts.uni_pair.methods.getReserves().call();
       console.log(r, r[0], r[1]);
-      let q = await ham.contracts.uni_router.methods.quote(ham.toBigN(10**18).toString(), r[0], r[1]).call();
+      let q = await spam.contracts.uni_router.methods.quote(spam.toBigN(10**18).toString(), r[0], r[1]).call();
       console.log("quote pre no rebase", q);
-      let b = await ham.contracts.rebaser.methods.rebase().send({
+      let b = await spam.contracts.rebaser.methods.rebase().send({
         from: user,
         gas: 2500000
       });
 
       console.log("no rebase gas used:", b["gasUsed"]);
 
-      let bal1 = await ham.contracts.ham.methods.balanceOf(user).call();
+      let bal1 = await spam.contracts.spam.methods.balanceOf(user).call();
 
-      let resHAM = await ham.contracts.ham.methods.balanceOf(ham.contracts.reserves.options.address).call();
+      let resSPAM = await spam.contracts.spam.methods.balanceOf(spam.contracts.reserves.options.address).call();
 
-      let resycrv = await ham.contracts.ycrv.methods.balanceOf(ham.contracts.reserves.options.address).call();
+      let resycrv = await spam.contracts.ycrv.methods.balanceOf(spam.contracts.reserves.options.address).call();
 
       // no change
-      expect(ham.toBigN(bal1).toNumber()).toBe(ham.toBigN(bal).toNumber());
+      expect(spam.toBigN(bal1).toNumber()).toBe(spam.toBigN(bal).toNumber());
       // no increases to reserves
-      expect(ham.toBigN(resHAM).toNumber()).toBe(0);
-      expect(ham.toBigN(resycrv).toNumber()).toBe(0);
-      r = await ham.contracts.uni_pair.methods.getReserves().call();
-      q = await ham.contracts.uni_router.methods.quote(ham.toBigN(10**18).toString(), r[0], r[1]).call();
+      expect(spam.toBigN(resSPAM).toNumber()).toBe(0);
+      expect(spam.toBigN(resycrv).toNumber()).toBe(0);
+      r = await spam.contracts.uni_pair.methods.getReserves().call();
+      q = await spam.contracts.uni_router.methods.quote(spam.toBigN(10**18).toString(), r[0], r[1]).call();
       console.log("quote post no rebase", q);
     });
-    test("rebasing with HAM in reserves", async () => {
-      await ham.contracts.ham.methods.transfer(ham.contracts.reserves.options.address, ham.toBigN(60000*10**18).toString()).send({from: user});
-      await ham.contracts.ham.methods.approve(
-        ham.contracts.uni_router.options.address,
+    test("rebasing with SPAM in reserves", async () => {
+      await spam.contracts.spam.methods.transfer(spam.contracts.reserves.options.address, spam.toBigN(60000*10**18).toString()).send({from: user});
+      await spam.contracts.spam.methods.approve(
+        spam.contracts.uni_router.options.address,
         -1
       ).send({
         from: user,
         gas: 80000
       });
-      await ham.contracts.ycrv.methods.approve(
-        ham.contracts.uni_router.options.address,
+      await spam.contracts.ycrv.methods.approve(
+        spam.contracts.uni_router.options.address,
         -1
       ).send({
         from: user,
         gas: 80000
       });
 
-      await ham.contracts.uni_router.methods.addLiquidity(
-        ham.contracts.ham.options.address,
-        ham.contracts.ycrv.options.address,
+      await spam.contracts.uni_router.methods.addLiquidity(
+        spam.contracts.spam.options.address,
+        spam.contracts.ycrv.options.address,
         "1000000000000000000000000",
         "1000000000000000000000000",
         "1000000000000000000000000",
@@ -795,21 +795,21 @@ describe("rebase_tests", () => {
         gas: 8000000
       });
 
-      let pair = await ham.contracts.uni_fact.methods.getPair(
-        ham.contracts.ham.options.address,
-        ham.contracts.ycrv.options.address
+      let pair = await spam.contracts.uni_fact.methods.getPair(
+        spam.contracts.spam.options.address,
+        spam.contracts.ycrv.options.address
       ).call();
 
-      ham.contracts.uni_pair.options.address = pair;
-      let bal = await ham.contracts.uni_pair.methods.balanceOf(user).call();
+      spam.contracts.uni_pair.options.address = pair;
+      let bal = await spam.contracts.uni_pair.methods.balanceOf(user).call();
 
       // make a trade to get init values in uniswap
-      await ham.contracts.uni_router.methods.swapExactTokensForTokens(
+      await spam.contracts.uni_router.methods.swapExactTokensForTokens(
         "100000000000",
         100000,
         [
-          ham.contracts.ycrv.options.address,
-          ham.contracts.ham.options.address
+          spam.contracts.ycrv.options.address,
+          spam.contracts.spam.options.address
         ],
         user,
         1596740361 + 10000000
@@ -819,12 +819,12 @@ describe("rebase_tests", () => {
       });
 
       // trade back for easier calcs later
-      await ham.contracts.uni_router.methods.swapExactTokensForTokens(
+      await spam.contracts.uni_router.methods.swapExactTokensForTokens(
         "100000000000",
         100000,
         [
-          ham.contracts.ham.options.address,
-          ham.contracts.ycrv.options.address
+          spam.contracts.spam.options.address,
+          spam.contracts.ycrv.options.address
         ],
         user,
         1596740361 + 10000000
@@ -833,20 +833,20 @@ describe("rebase_tests", () => {
         gas: 1000000
       });
 
-      await ham.testing.increaseTime(43200);
+      await spam.testing.increaseTime(43200);
 
-      await ham.contracts.rebaser.methods.init_twap().send({
+      await spam.contracts.rebaser.methods.init_twap().send({
         from: user,
         gas: 500000
       });
 
 
-      await ham.contracts.uni_router.methods.swapExactTokensForTokens(
+      await spam.contracts.uni_router.methods.swapExactTokensForTokens(
         "500000000000000000000000",
         100000,
         [
-          ham.contracts.ycrv.options.address,
-          ham.contracts.ham.options.address
+          spam.contracts.ycrv.options.address,
+          spam.contracts.spam.options.address
         ],
         user,
         1596740361 + 10000000
@@ -856,18 +856,18 @@ describe("rebase_tests", () => {
       });
 
       // init twap
-      let init_twap = await ham.contracts.rebaser.methods.timeOfTWAPInit().call();
+      let init_twap = await spam.contracts.rebaser.methods.timeOfTWAPInit().call();
 
       // wait 12 hours
-      await ham.testing.increaseTime(12 * 60 * 60);
+      await spam.testing.increaseTime(12 * 60 * 60);
 
       // perform trade to change price
-      await ham.contracts.uni_router.methods.swapExactTokensForTokens(
+      await spam.contracts.uni_router.methods.swapExactTokensForTokens(
         "10000000000000000000",
         100000,
         [
-          ham.contracts.ycrv.options.address,
-          ham.contracts.ham.options.address
+          spam.contracts.ycrv.options.address,
+          spam.contracts.spam.options.address
         ],
         user,
         1596740361 + 10000000
@@ -877,20 +877,20 @@ describe("rebase_tests", () => {
       });
 
       // activate rebasing
-      await ham.contracts.rebaser.methods.activate_rebasing().send({
+      await spam.contracts.rebaser.methods.activate_rebasing().send({
         from: user,
         gas: 500000
       });
 
 
-      bal = await ham.contracts.ham.methods.balanceOf(user).call();
+      bal = await spam.contracts.spam.methods.balanceOf(user).call();
 
-      let a = await ham.web3.eth.getBlock('latest');
+      let a = await spam.web3.eth.getBlock('latest');
 
-      let offset = await ham.contracts.rebaser.methods.rebaseWindowOffsetSec().call();
-      offset = ham.toBigN(offset).toNumber();
-      let interval = await ham.contracts.rebaser.methods.minRebaseTimeIntervalSec().call();
-      interval = ham.toBigN(interval).toNumber();
+      let offset = await spam.contracts.rebaser.methods.rebaseWindowOffsetSec().call();
+      offset = spam.toBigN(offset).toNumber();
+      let interval = await spam.contracts.rebaser.methods.minRebaseTimeIntervalSec().call();
+      interval = spam.toBigN(interval).toNumber();
 
       let i;
       if (a["timestamp"] % interval > offset) {
@@ -899,14 +899,14 @@ describe("rebase_tests", () => {
         i = offset - (a["timestamp"] % interval);
       }
 
-      await ham.testing.increaseTime(i);
+      await spam.testing.increaseTime(i);
 
 
-      let r = await ham.contracts.uni_pair.methods.getReserves().call();
-      let q = await ham.contracts.uni_router.methods.quote(ham.toBigN(10**18).toString(), r[0], r[1]).call();
+      let r = await spam.contracts.uni_pair.methods.getReserves().call();
+      let q = await spam.contracts.uni_router.methods.quote(spam.toBigN(10**18).toString(), r[0], r[1]).call();
       console.log("quote pre pos rebase with reserves", q);
 
-      let b = await ham.contracts.rebaser.methods.rebase().send({
+      let b = await spam.contracts.rebaser.methods.rebase().send({
         from: user,
         gas: 2500000
       });
@@ -914,55 +914,55 @@ describe("rebase_tests", () => {
 
       console.log("positive  with reserves gas used:", b["gasUsed"]);
 
-      let bal1 = await ham.contracts.ham.methods.balanceOf(user).call();
+      let bal1 = await spam.contracts.spam.methods.balanceOf(user).call();
 
-      let resHAM = await ham.contracts.ham.methods.balanceOf(ham.contracts.reserves.options.address).call();
+      let resSPAM = await spam.contracts.spam.methods.balanceOf(spam.contracts.reserves.options.address).call();
 
-      let resycrv = await ham.contracts.ycrv.methods.balanceOf(ham.contracts.reserves.options.address).call();
+      let resycrv = await spam.contracts.ycrv.methods.balanceOf(spam.contracts.reserves.options.address).call();
 
-      console.log(bal, bal1, resHAM, resycrv);
-      expect(ham.toBigN(bal).toNumber()).toBeLessThan(ham.toBigN(bal1).toNumber());
-      expect(ham.toBigN(resHAM).toNumber()).toBeGreaterThan(0);
-      expect(ham.toBigN(resycrv).toNumber()).toBeGreaterThan(0);
-      r = await ham.contracts.uni_pair.methods.getReserves().call();
-      q = await ham.contracts.uni_router.methods.quote(ham.toBigN(10**18).toString(), r[0], r[1]).call();
+      console.log(bal, bal1, resSPAM, resycrv);
+      expect(spam.toBigN(bal).toNumber()).toBeLessThan(spam.toBigN(bal1).toNumber());
+      expect(spam.toBigN(resSPAM).toNumber()).toBeGreaterThan(0);
+      expect(spam.toBigN(resycrv).toNumber()).toBeGreaterThan(0);
+      r = await spam.contracts.uni_pair.methods.getReserves().call();
+      q = await spam.contracts.uni_router.methods.quote(spam.toBigN(10**18).toString(), r[0], r[1]).call();
       console.log("quote post rebase w/ reserves", q);
-      expect(ham.toBigN(q).toNumber()).toBeGreaterThan(ham.toBigN(10**18).toNumber());
+      expect(spam.toBigN(q).toNumber()).toBeGreaterThan(spam.toBigN(10**18).toNumber());
     });
   });
 
   describe("failing", () => {
     test("unitialized rebasing", async () => {
-      await ham.testing.expectThrow(ham.contracts.rebaser.methods.activate_rebasing().send({
+      await spam.testing.expectThrow(spam.contracts.rebaser.methods.activate_rebasing().send({
         from: user,
         gas: 500000
       }), "twap wasnt intitiated, call init_twap()");
     });
     test("no early twap", async () => {
-      await ham.testing.expectThrow(ham.contracts.rebaser.methods.init_twap().send({
+      await spam.testing.expectThrow(spam.contracts.rebaser.methods.init_twap().send({
         from: user,
         gas: 500000
       }), "");
     });
     test("too late rebasing", async () => {
-      await ham.contracts.ham.methods.approve(
-        ham.contracts.uni_router.options.address,
+      await spam.contracts.spam.methods.approve(
+        spam.contracts.uni_router.options.address,
         -1
       ).send({
         from: user,
         gas: 80000
       });
-      await ham.contracts.ycrv.methods.approve(
-        ham.contracts.uni_router.options.address,
+      await spam.contracts.ycrv.methods.approve(
+        spam.contracts.uni_router.options.address,
         -1
       ).send({
         from: user,
         gas: 80000
       });
 
-      await ham.contracts.uni_router.methods.addLiquidity(
-        ham.contracts.ham.options.address,
-        ham.contracts.ycrv.options.address,
+      await spam.contracts.uni_router.methods.addLiquidity(
+        spam.contracts.spam.options.address,
+        spam.contracts.ycrv.options.address,
         "1000000000000000000000000",
         "1000000000000000000000000",
         "1000000000000000000000000",
@@ -974,21 +974,21 @@ describe("rebase_tests", () => {
         gas: 8000000
       });
 
-      let pair = await ham.contracts.uni_fact.methods.getPair(
-        ham.contracts.ham.options.address,
-        ham.contracts.ycrv.options.address
+      let pair = await spam.contracts.uni_fact.methods.getPair(
+        spam.contracts.spam.options.address,
+        spam.contracts.ycrv.options.address
       ).call();
 
-      ham.contracts.uni_pair.options.address = pair;
-      let bal = await ham.contracts.uni_pair.methods.balanceOf(user).call();
+      spam.contracts.uni_pair.options.address = pair;
+      let bal = await spam.contracts.uni_pair.methods.balanceOf(user).call();
 
       // make a trade to get init values in uniswap
-      await ham.contracts.uni_router.methods.swapExactTokensForTokens(
+      await spam.contracts.uni_router.methods.swapExactTokensForTokens(
         "100000000000",
         100000,
         [
-          ham.contracts.ycrv.options.address,
-          ham.contracts.ham.options.address
+          spam.contracts.ycrv.options.address,
+          spam.contracts.spam.options.address
         ],
         user,
         1596740361 + 10000000
@@ -998,12 +998,12 @@ describe("rebase_tests", () => {
       });
 
       // trade back for easier calcs later
-      await ham.contracts.uni_router.methods.swapExactTokensForTokens(
+      await spam.contracts.uni_router.methods.swapExactTokensForTokens(
         "100000000000",
         100000,
         [
-          ham.contracts.ham.options.address,
-          ham.contracts.ycrv.options.address
+          spam.contracts.spam.options.address,
+          spam.contracts.ycrv.options.address
         ],
         user,
         1596740361 + 10000000
@@ -1012,20 +1012,20 @@ describe("rebase_tests", () => {
         gas: 1000000
       });
 
-      await ham.testing.increaseTime(43200);
+      await spam.testing.increaseTime(43200);
 
-      await ham.contracts.rebaser.methods.init_twap().send({
+      await spam.contracts.rebaser.methods.init_twap().send({
         from: user,
         gas: 500000
       });
 
 
-      await ham.contracts.uni_router.methods.swapExactTokensForTokens(
+      await spam.contracts.uni_router.methods.swapExactTokensForTokens(
         "500000000000000000000000",
         100000,
         [
-          ham.contracts.ycrv.options.address,
-          ham.contracts.ham.options.address
+          spam.contracts.ycrv.options.address,
+          spam.contracts.spam.options.address
         ],
         user,
         1596740361 + 10000000
@@ -1035,18 +1035,18 @@ describe("rebase_tests", () => {
       });
 
       // init twap
-      let init_twap = await ham.contracts.rebaser.methods.timeOfTWAPInit().call();
+      let init_twap = await spam.contracts.rebaser.methods.timeOfTWAPInit().call();
 
       // wait 12 hours
-      await ham.testing.increaseTime(12 * 60 * 60);
+      await spam.testing.increaseTime(12 * 60 * 60);
 
       // perform trade to change price
-      await ham.contracts.uni_router.methods.swapExactTokensForTokens(
+      await spam.contracts.uni_router.methods.swapExactTokensForTokens(
         "10000000000000000000",
         100000,
         [
-          ham.contracts.ycrv.options.address,
-          ham.contracts.ham.options.address
+          spam.contracts.ycrv.options.address,
+          spam.contracts.spam.options.address
         ],
         user,
         1596740361 + 10000000
@@ -1056,20 +1056,20 @@ describe("rebase_tests", () => {
       });
 
       // activate rebasing
-      await ham.contracts.rebaser.methods.activate_rebasing().send({
+      await spam.contracts.rebaser.methods.activate_rebasing().send({
         from: user,
         gas: 500000
       });
 
 
-      bal = await ham.contracts.ham.methods.balanceOf(user).call();
+      bal = await spam.contracts.spam.methods.balanceOf(user).call();
 
-      let a = await ham.web3.eth.getBlock('latest');
+      let a = await spam.web3.eth.getBlock('latest');
 
-      let offset = await ham.contracts.rebaser.methods.rebaseWindowOffsetSec().call();
-      offset = ham.toBigN(offset).toNumber();
-      let interval = await ham.contracts.rebaser.methods.minRebaseTimeIntervalSec().call();
-      interval = ham.toBigN(interval).toNumber();
+      let offset = await spam.contracts.rebaser.methods.rebaseWindowOffsetSec().call();
+      offset = spam.toBigN(offset).toNumber();
+      let interval = await spam.contracts.rebaser.methods.minRebaseTimeIntervalSec().call();
+      interval = spam.toBigN(interval).toNumber();
 
       let i;
       if (a["timestamp"] % interval > offset) {
@@ -1078,34 +1078,34 @@ describe("rebase_tests", () => {
         i = offset - (a["timestamp"] % interval);
       }
 
-      let len = await ham.contracts.rebaser.methods.rebaseWindowLengthSec().call();
+      let len = await spam.contracts.rebaser.methods.rebaseWindowLengthSec().call();
 
-      await ham.testing.increaseTime(i + ham.toBigN(len).toNumber()+1);
+      await spam.testing.increaseTime(i + spam.toBigN(len).toNumber()+1);
 
-      let b = await ham.testing.expectThrow(ham.contracts.rebaser.methods.rebase().send({
+      let b = await spam.testing.expectThrow(spam.contracts.rebaser.methods.rebase().send({
         from: user,
         gas: 2500000
       }), "too late");
     });
     test("too early rebasing", async () => {
-      await ham.contracts.ham.methods.approve(
-        ham.contracts.uni_router.options.address,
+      await spam.contracts.spam.methods.approve(
+        spam.contracts.uni_router.options.address,
         -1
       ).send({
         from: user,
         gas: 80000
       });
-      await ham.contracts.ycrv.methods.approve(
-        ham.contracts.uni_router.options.address,
+      await spam.contracts.ycrv.methods.approve(
+        spam.contracts.uni_router.options.address,
         -1
       ).send({
         from: user,
         gas: 80000
       });
 
-      await ham.contracts.uni_router.methods.addLiquidity(
-        ham.contracts.ham.options.address,
-        ham.contracts.ycrv.options.address,
+      await spam.contracts.uni_router.methods.addLiquidity(
+        spam.contracts.spam.options.address,
+        spam.contracts.ycrv.options.address,
         "1000000000000000000000000",
         "1000000000000000000000000",
         "1000000000000000000000000",
@@ -1117,21 +1117,21 @@ describe("rebase_tests", () => {
         gas: 8000000
       });
 
-      let pair = await ham.contracts.uni_fact.methods.getPair(
-        ham.contracts.ham.options.address,
-        ham.contracts.ycrv.options.address
+      let pair = await spam.contracts.uni_fact.methods.getPair(
+        spam.contracts.spam.options.address,
+        spam.contracts.ycrv.options.address
       ).call();
 
-      ham.contracts.uni_pair.options.address = pair;
-      let bal = await ham.contracts.uni_pair.methods.balanceOf(user).call();
+      spam.contracts.uni_pair.options.address = pair;
+      let bal = await spam.contracts.uni_pair.methods.balanceOf(user).call();
 
       // make a trade to get init values in uniswap
-      await ham.contracts.uni_router.methods.swapExactTokensForTokens(
+      await spam.contracts.uni_router.methods.swapExactTokensForTokens(
         "100000000000",
         100000,
         [
-          ham.contracts.ycrv.options.address,
-          ham.contracts.ham.options.address
+          spam.contracts.ycrv.options.address,
+          spam.contracts.spam.options.address
         ],
         user,
         1596740361 + 10000000
@@ -1141,12 +1141,12 @@ describe("rebase_tests", () => {
       });
 
       // trade back for easier calcs later
-      await ham.contracts.uni_router.methods.swapExactTokensForTokens(
+      await spam.contracts.uni_router.methods.swapExactTokensForTokens(
         "100000000000",
         100000,
         [
-          ham.contracts.ham.options.address,
-          ham.contracts.ycrv.options.address
+          spam.contracts.spam.options.address,
+          spam.contracts.ycrv.options.address
         ],
         user,
         1596740361 + 10000000
@@ -1155,20 +1155,20 @@ describe("rebase_tests", () => {
         gas: 1000000
       });
 
-      await ham.testing.increaseTime(43200);
+      await spam.testing.increaseTime(43200);
 
-      await ham.contracts.rebaser.methods.init_twap().send({
+      await spam.contracts.rebaser.methods.init_twap().send({
         from: user,
         gas: 500000
       });
 
 
-      await ham.contracts.uni_router.methods.swapExactTokensForTokens(
+      await spam.contracts.uni_router.methods.swapExactTokensForTokens(
         "500000000000000000000000",
         100000,
         [
-          ham.contracts.ycrv.options.address,
-          ham.contracts.ham.options.address
+          spam.contracts.ycrv.options.address,
+          spam.contracts.spam.options.address
         ],
         user,
         1596740361 + 10000000
@@ -1178,18 +1178,18 @@ describe("rebase_tests", () => {
       });
 
       // init twap
-      let init_twap = await ham.contracts.rebaser.methods.timeOfTWAPInit().call();
+      let init_twap = await spam.contracts.rebaser.methods.timeOfTWAPInit().call();
 
       // wait 12 hours
-      await ham.testing.increaseTime(12 * 60 * 60);
+      await spam.testing.increaseTime(12 * 60 * 60);
 
       // perform trade to change price
-      await ham.contracts.uni_router.methods.swapExactTokensForTokens(
+      await spam.contracts.uni_router.methods.swapExactTokensForTokens(
         "10000000000000000000",
         100000,
         [
-          ham.contracts.ycrv.options.address,
-          ham.contracts.ham.options.address
+          spam.contracts.ycrv.options.address,
+          spam.contracts.spam.options.address
         ],
         user,
         1596740361 + 10000000
@@ -1199,19 +1199,19 @@ describe("rebase_tests", () => {
       });
 
       // activate rebasing
-      await ham.contracts.rebaser.methods.activate_rebasing().send({
+      await spam.contracts.rebaser.methods.activate_rebasing().send({
         from: user,
         gas: 500000
       });
 
-      bal = await ham.contracts.ham.methods.balanceOf(user).call();
+      bal = await spam.contracts.spam.methods.balanceOf(user).call();
 
-      let a = await ham.web3.eth.getBlock('latest');
+      let a = await spam.web3.eth.getBlock('latest');
 
-      let offset = await ham.contracts.rebaser.methods.rebaseWindowOffsetSec().call();
-      offset = ham.toBigN(offset).toNumber();
-      let interval = await ham.contracts.rebaser.methods.minRebaseTimeIntervalSec().call();
-      interval = ham.toBigN(interval).toNumber();
+      let offset = await spam.contracts.rebaser.methods.rebaseWindowOffsetSec().call();
+      offset = spam.toBigN(offset).toNumber();
+      let interval = await spam.contracts.rebaser.methods.minRebaseTimeIntervalSec().call();
+      interval = spam.toBigN(interval).toNumber();
 
       let i;
       if (a["timestamp"] % interval > offset) {
@@ -1220,11 +1220,11 @@ describe("rebase_tests", () => {
         i = offset - (a["timestamp"] % interval);
       }
 
-      await ham.testing.increaseTime(i - 1);
+      await spam.testing.increaseTime(i - 1);
 
 
 
-      let b = await ham.testing.expectThrow(ham.contracts.rebaser.methods.rebase().send({
+      let b = await spam.testing.expectThrow(spam.contracts.rebaser.methods.rebase().send({
         from: user,
         gas: 2500000
       }), "too early");

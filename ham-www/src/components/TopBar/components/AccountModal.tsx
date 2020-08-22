@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from 'react'
 import styled from 'styled-components'
 
-import { ham as hamAddress } from '../../../constants/tokenAddresses'
+import { spam as spamAddress } from '../../../constants/tokenAddresses'
 import useTokenBalance from '../../../hooks/useTokenBalance'
 import { getDisplayBalance } from '../../../utils/formatBalance'
 
@@ -19,10 +19,10 @@ const AccountModal: React.FC<ModalProps> = ({ onDismiss }) => {
     onDismiss!()
   }, [onDismiss])
 
-  const hamBalance = useTokenBalance(hamAddress)
+  const spamBalance = useTokenBalance(spamAddress)
   const displayBalance = useMemo(() => {
-    return getDisplayBalance(hamBalance)
-  }, [hamBalance])
+    return getDisplayBalance(spamBalance)
+  }, [spamBalance])
 
   return (
     <Modal>
@@ -32,7 +32,7 @@ const AccountModal: React.FC<ModalProps> = ({ onDismiss }) => {
         <CardIcon>🍖</CardIcon>
         <StyledBalance>
           <StyledValue>{displayBalance}</StyledValue>
-          <Label text="HAM Balance" />
+          <Label text="SPAM Balance" />
         </StyledBalance>
         <StyledBalanceActions>
           <IconButton>

@@ -2,8 +2,8 @@
 
 // Token
 // deployed first
-const HAMImplementation = artifacts.require("HAMDelegate");
-const HAMProxy = artifacts.require("HAMDelegator");
+const SPAMImplementation = artifacts.require("SPAMDelegate");
+const SPAMProxy = artifacts.require("SPAMDelegator");
 
 // ============ Main Migration ============
 
@@ -19,23 +19,23 @@ module.exports = migration;
 
 
 async function deployToken(deployer, network) {
-  await deployer.deploy(HAMImplementation);
+  await deployer.deploy(SPAMImplementation);
   if (network != "mainnet") {
-    await deployer.deploy(HAMProxy,
-      "HAM",
-      "HAM",
+    await deployer.deploy(SPAMProxy,
+      "SPAM",
+      "SPAM",
       18,
       "9000000000000000000000000", // print extra few mil for user
-      HAMImplementation.address,
+      SPAMImplementation.address,
       "0x"
     );
   } else {
-    await deployer.deploy(HAMProxy,
-      "HAM",
-      "HAM",
+    await deployer.deploy(SPAMProxy,
+      "SPAM",
+      "SPAM",
       18,
       "2000000000000000000000000",
-      HAMImplementation.address,
+      SPAMImplementation.address,
       "0x"
     );
   }

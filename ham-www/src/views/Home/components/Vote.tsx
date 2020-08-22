@@ -11,7 +11,7 @@ import CardContent from '../../../components/CardContent'
 import Label from '../../../components/Label'
 import Spacer from '../../../components/Spacer'
 
-import useHam from '../../../hooks/useHam'
+import useSpam from '../../../hooks/useSpam'
 
 import {
   delegate,
@@ -19,7 +19,7 @@ import {
   getDelegatedBalance,
   getScalingFactor,
   getVotes,
-} from '../../../hamUtils'
+} from '../../../spamUtils'
 
 interface VoteProps {
 }
@@ -34,7 +34,7 @@ const Vote: React.FC<VoteProps> = () => {
   const [delegatedBalance, setDelegatedBalance] = useState(new BigNumber(0))
 
   const { account } = useWallet()
-  const ham = useHam()
+  const spam = useSpam()
 
   const renderer = (countdownProps: CountdownRenderProps) => {
     const { hours, minutes, seconds } = countdownProps
@@ -57,38 +57,38 @@ const Vote: React.FC<VoteProps> = () => {
   }
 
   const handleVoteClick = useCallback(() => {
-    delegate(ham, account)
-  }, [account, ham])
+    delegate(spam, account)
+  }, [account, spam])
 
   const fetchVotes = useCallback(async () => {
-    const voteCount = await getVotes(ham)
-    const scalingFactor = await getScalingFactor(ham)
+    const voteCount = await getVotes(spam)
+    const scalingFactor = await getScalingFactor(spam)
     setTotalVotes(voteCount)
     setScalingFactor(scalingFactor)
-  }, [ham, setTotalVotes, setScalingFactor])
+  }, [spam, setTotalVotes, setScalingFactor])
 
   useEffect(() => {
-    if (ham) {
+    if (spam) {
       fetchVotes()
     }
     const refetch = setInterval(fetchVotes, 10000)
     return () => clearInterval(refetch)
-  }, [fetchVotes, ham])
+  }, [fetchVotes, spam])
 
   const fetchDidDelegate = useCallback(async () => {
-    const d = await didDelegate(ham, account)
+    const d = await didDelegate(spam, account)
     if (d) {
-      const amount = await getDelegatedBalance(ham, account)
+      const amount = await getDelegatedBalance(spam, account)
       setDelegatedBalance(amount)
     }
     setDelegated(d)
-  }, [setDelegated, ham, account, setDelegatedBalance])
+  }, [setDelegated, spam, account, setDelegatedBalance])
 
   useEffect(() => {
-    if (ham && account) {
+    if (spam && account) {
       fetchDidDelegate()
     }
-  }, [fetchDidDelegate, ham, account])
+  }, [fetchDidDelegate, spam, account])
 
   return (
     <Card>
@@ -126,7 +126,7 @@ const Vote: React.FC<VoteProps> = () => {
                   fontSize: 12,
                   marginTop: 4,
                   marginLeft: 4,
-                }}>{`/ ${Number(new BigNumber(160000).multipliedBy(scalingFactor).toFixed(0)).toLocaleString()} HAM`}</div>
+                }}>{`/ ${Number(new BigNumber(160000).multipliedBy(scalingFactor).toFixed(0)).toLocaleString()} SPAM`}</div>
             </div>
           </StyledCenter>
         </StyledResponsiveWrapper>
@@ -152,10 +152,10 @@ const Vote: React.FC<VoteProps> = () => {
         </StyledCheckpoints>
         <Spacer />
         {!delegated ? (
-          <Button text="Delegate to help HAM" onClick={handleVoteClick} />
+          <Button text="Delegate to help SPAM" onClick={handleVoteClick} />
         ) : (
           <div>
-            <StyledDelegatedCount>Delegating: {Number(delegatedBalance.multipliedBy(scalingFactor).toFixed(0)).toLocaleString()} HAM</StyledDelegatedCount>
+            <StyledDelegatedCount>Delegating: {Number(delegatedBalance.multipliedBy(scalingFactor).toFixed(0)).toLocaleString()} SPAM</StyledDelegatedCount>
             <StyledThankYou>Thank you for your support ❤️</StyledThankYou>
             <div style={{
               alignItems: 'baseline',
@@ -175,8 +175,8 @@ const Vote: React.FC<VoteProps> = () => {
           paddingTop: 24,
           opacity: 0.6,
         }}>
-                  {/*<p>NOTE: You must harvest your HAMs BEFORE 7am UTC Thursday 8/13 - very soon.</p>
-          <p>Hold them in your wallet until 10PM UTC Sunday 8/16 for your delegation to save HAM</p>*/}
+                  {/*<p>NOTE: You must harvest your SPAMs BEFORE 7am UTC Thursday 8/13 - very soon.</p>
+          <p>Hold them in your wallet until 10PM UTC Sunday 8/16 for your delegation to save SPAM</p>*/}
         </div>
           <div style={{
             display: 'flex',
@@ -184,7 +184,7 @@ const Vote: React.FC<VoteProps> = () => {
             justifyContent: 'center',
             marginTop: 32,
           }}>
-          {/*<StyledLink target="__blank" href="https://twitter.com/HamFinance/status/1293660938906869760">More Info</StyledLink>*/}
+          {/*<StyledLink target="__blank" href="https://twitter.com/SpamFinance/status/1293660938906869760">More Info</StyledLink>*/}
         </div>
       </CardContent>
     </Card>

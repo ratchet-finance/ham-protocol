@@ -1,7 +1,7 @@
 {
-  "name": "ham",
+  "name": "spam",
   "version": "1.0.0",
-  "description": "HAM protocol repo",
+  "description": "SPAM protocol repo",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

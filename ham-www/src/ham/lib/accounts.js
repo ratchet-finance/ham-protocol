@@ -15,8 +15,8 @@ export class Account {
     this.walletInfo = {};
   }
 
-  async getHAMWalletBalance() {
-    this.walletInfo["DAI"] = await this.contracts.ham.methods.balanceOf(this.accountInfo).call();
+  async getSPAMWalletBalance() {
+    this.walletInfo["DAI"] = await this.contracts.spam.methods.balanceOf(this.accountInfo).call();
     return this.walletInfo["DAI"]
   }
 

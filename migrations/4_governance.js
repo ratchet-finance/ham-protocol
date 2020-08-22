@@ -3,13 +3,13 @@
 
 // Token
 // deployed first
-const HAMImplementation = artifacts.require("HAMDelegate");
-const HAMProxy = artifacts.require("HAMDelegator");
+const SPAMImplementation = artifacts.require("SPAMDelegate");
+const SPAMProxy = artifacts.require("SPAMDelegator");
 
 // Rs
 // deployed second
-const HAMReserves = artifacts.require("HAMReserves");
-const HAMRebaser = artifacts.require("HAMRebaser");
+const SPAMReserves = artifacts.require("SPAMReserves");
+const SPAMRebaser = artifacts.require("SPAMRebaser");
 
 // Governance
 // deployed third
@@ -39,6 +39,6 @@ async function deployGovernance(deployer, network) {
   await deployer.deploy(Timelock);
   await deployer.deploy(Gov,
       Timelock.address,
-      HAMProxy.address
+      SPAMProxy.address
   );
 }
